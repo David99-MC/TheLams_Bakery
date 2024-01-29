@@ -15,7 +15,11 @@ mongoose
   });
 
 const app = express();
+
+// For parsing application/json
 app.use(express.json());
+
+// For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response) => {
@@ -23,9 +27,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/bread", (req: Request, res: Response) => {
-  const { ingredient, type, dairy } = req.body;
-  console.log(`request body: ${req.body}`);
-  res.send(`received post request: ${ingredient} ${type} ${dairy}`);
+  // const { ingredient, type, dairy } = req.body;
+  console.log(`request body: `, req.body);
+  res.send(req.body);
 });
 
 app.listen(PORT, () => {
