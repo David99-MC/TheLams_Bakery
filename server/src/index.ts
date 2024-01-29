@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 import { config } from "dotenv";
 config();
 
 const PORT = 5000;
-const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // || process.env.MONGO_URL
+const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
 mongoose
-  .connect(DB_URL)
+  .connect(DB_URL!)
   .then(() => {
     console.log("CONNECTED TO THELAMS_BAKERY");
   })
@@ -18,9 +19,13 @@ const app = express();
 
 // For parsing application/json
 app.use(express.json());
-
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("hello from express with nodemon setup");
