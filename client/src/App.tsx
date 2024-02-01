@@ -1,39 +1,21 @@
-import React, { useState } from "react";
-import "./App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Home from "./ui/Home";
+import Menu from "./features/menu/Menu";
+import Cart from "./features/cart/Cart";
+import CreateOrder from "./features/order/CreateOrder";
 
 function App() {
-  const [name, setName] = useState("");
-
-  async function handleFormSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    try {
-      const bodyObj = { name };
-      await fetch("http://localhost:5000/bread", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(bodyObj),
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setName("");
-    }
-  }
-
   return (
-    <div>
-      <form onSubmit={handleFormSubmit}>
-        <label htmlFor="name">Product name: </label>
-        <input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button>Submit</button>
-      </form>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<Navigate replace to="home" />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/order/new" element={<CreateOrder />} />
+        {/* <Route path="/order/:orderID" element={<CreateOrder />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 

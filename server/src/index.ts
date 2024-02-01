@@ -32,7 +32,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/bread", (req: Request, res: Response) => {
-  // const { ingredient, type, dairy } = req.body;
   console.log(`request body: `, req.body);
   res.send(req.body);
 });
