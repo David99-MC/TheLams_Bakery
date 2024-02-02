@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 
-type Cake = {
+export type Cake = {
+  id?: string;
   vietnameseName: string;
   englishName?: string;
   imgUrl?: string;

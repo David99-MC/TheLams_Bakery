@@ -2,7 +2,9 @@ import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 import { config } from "dotenv";
+import Cake from "./models/cake";
 config();
 
 const PORT = 5000;
@@ -18,6 +20,9 @@ mongoose
 
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // For parsing application/json
 app.use(express.json());
 // For parsing application/x-www-form-urlencoded
@@ -31,6 +36,11 @@ app.use(express.static(path.join(__dirname, "images")));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("hello from express with nodemon setup");
+});
+
+app.get("/menu", async (req: Request, res: Response) => {
+  const cakes = await Cake.find({});
+  res.send(cakes);
 });
 
 app.post("/bread", (req: Request, res: Response) => {
