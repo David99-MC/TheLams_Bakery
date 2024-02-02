@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import path from "path";
 import { config } from "dotenv";
 config();
 
@@ -26,6 +27,7 @@ app.use(
     origin: "*",
   })
 );
+app.use(express.static(path.join(__dirname, "images")));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("hello from express with nodemon setup");
