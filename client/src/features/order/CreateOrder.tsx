@@ -1,5 +1,9 @@
+import { useState } from "react"
+import Button from "../../ui/Button"
+
 function CreateOrder() {
   // const [withPriority, setWithPriority] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   return (
     <div>
@@ -8,26 +12,33 @@ function CreateOrder() {
       <form>
         <div>
           <label>First Name</label>
-          <input type="text" name="customer" required />
+          <input type="text" className="input" name="customer" required />
         </div>
 
         <div>
           <label>Phone number</label>
           <div>
-            <input type="tel" name="phone" required />
+            <input type="tel" className="input" name="phone" required />
           </div>
         </div>
 
         <div>
           <label>Address</label>
           <div>
-            <input type="text" name="address" required />
+            <input
+              type="text"
+              name="address"
+              placeholder="1234 st, OG"
+              className="input"
+              required
+            />
           </div>
         </div>
 
         <div>
           <input
             type="checkbox"
+            className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
             name="priority"
             id="priority"
             // value={withPriority}
@@ -37,11 +48,13 @@ function CreateOrder() {
         </div>
 
         <div>
-          <button>Order now</button>
+          <Button disabled={isSubmitting}>
+            {isSubmitting ? "Placing order..." : "Order now"}
+          </Button>
         </div>
       </form>
     </div>
-  );
+  )
 }
 
-export default CreateOrder;
+export default CreateOrder
