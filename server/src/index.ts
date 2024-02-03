@@ -40,7 +40,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.get("/menu", async (req: Request, res: Response) => {
   const cakes = await Cake.find({});
-  res.send(cakes);
+  res.json(cakes);
 });
 
 app.post("/bread", (req: Request, res: Response) => {

@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 export type Cake = {
-  id?: string;
+  _id?: string;
   vietnameseName: string;
   englishName?: string;
   imgUrl?: string;

@@ -11,10 +11,9 @@ function Cart() {
       </div>
 
       <div className="space-x-3">
-        {/* <Link to="/order/new" className="bg-yellow-400 px-4 py-3">
+        <Button type="primary" to="/order/new">
           Make an order
-        </Link> */}
-        <Button to="/order/new">Make an order</Button>
+        </Button>
         <button className="bg-yellow-400 px-4 py-3">Clear cart</button>
       </div>
     </div>

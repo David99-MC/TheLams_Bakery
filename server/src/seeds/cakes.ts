@@ -29,10 +29,10 @@ const ingredientList: string[] = [
 ];
 
 const imgUrls: string[] = [
-  "/banh chung.jpg",
-  "/banh chuoi.jpg",
-  "/banh dau xanh.jpg",
-  "/banh deo.jpg",
+  "/images/banh chung.jpg",
+  "/images/banh chuoi.jpg",
+  "/images/banh dau xanh.jpg",
+  "/images/banh deo.jpg",
 ];
 
 export const cakes: Cake[] = [
