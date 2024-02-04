@@ -1,18 +1,22 @@
-import { formatCurrency } from "../../utils/helper";
-
-function OrderItem({ item, isLoadingIngredients, ingredients }) {
-  const { quantity, name, totalPrice } = item;
-
-  return (
-    <li>
-      <div>
-        <p>
-          <span>{quantity}&times;</span> {name}
-        </p>
-        <p>{formatCurrency(totalPrice)}</p>
-      </div>
-    </li>
-  );
+type item = {
+  name: string
+  quantity: number
+  totalPrice: number
 }
 
-export default OrderItem;
+function OrderItem(item: item) {
+  const { quantity, name, totalPrice } = item
+
+  return (
+    <li className="py-3">
+      <div className="item-center flex justify-between">
+        <p>
+          <span className="font-semibold">{quantity}&times;</span> {name}
+        </p>
+        <p className="font-bold">${totalPrice}</p>
+      </div>
+    </li>
+  )
+}
+
+export default OrderItem
