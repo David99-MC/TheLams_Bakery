@@ -27,7 +27,7 @@ async function seedDB() {
     });
     await cake.save();
   }
-
+  await Order.deleteMany({});
   for (let fakeOrder of fakeOrders) {
     const order = new Order(fakeOrder);
     await order.save();

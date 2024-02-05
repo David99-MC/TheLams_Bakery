@@ -46,9 +46,12 @@ app.get("/menu", async (req: Request, res: Response) => {
 
 app.get("/order/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-  const order = await Order.findById(id);
-  console.log("received get request at /order/", id);
-  res.json(order);
+  try {
+    const order = await Order.findById(id);
+    res.json(order);
+  } catch (err) {
+    res.json(err);
+  }
 });
 
 // app.post("/bread", (req: Request, res: Response) => {

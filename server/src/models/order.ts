@@ -10,7 +10,7 @@ export type Order = {
   estimatedDelivery: string;
   cart: {
     productID: number; // ref from Cake item
-    name: string;
+    productName: string;
     quantity: number;
     unitPrice: number;
     totalPrice: number;

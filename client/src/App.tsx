@@ -7,16 +7,10 @@ import Menu from "./features/menu/Menu"
 import Cart from "./features/cart/Cart"
 import CreateOrder from "./features/order/CreateOrder"
 import AppLayout from "./ui/AppLayout"
-// import Order from "./features/order/Order"
+import Order from "./features/order/Order"
 import ErrorNode from "./ui/ErrorNode"
 
-const queryClient: QueryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 0,
-    },
-  },
-})
+const queryClient: QueryClient = new QueryClient()
 
 function App() {
   return (
@@ -30,8 +24,8 @@ function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/order/new" element={<CreateOrder />} />
-            {/* <Route path="/order/:orderID" element={<Order />} /> */}{" "}
             {/** Does NOT work atm */}
+            <Route path="/order/:orderId" element={<Order />} />
             <Route
               path="*"
               element={

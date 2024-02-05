@@ -10,21 +10,21 @@ export const fakeOrders: Order[] = [
     cart: [
       {
         productID: 7,
-        name: "Banh Chung",
+        productName: "Banh Chung",
         quantity: 3,
         unitPrice: 16,
         totalPrice: 48,
       },
       {
         productID: 5,
-        name: "Banh Chuoi",
+        productName: "Banh Chuoi",
         quantity: 2,
         unitPrice: 16,
         totalPrice: 32,
       },
       {
         productID: 3,
-        name: "Banh Dau Xanh",
+        productName: "Banh Dau Xanh",
         quantity: 1,
         unitPrice: 15,
         totalPrice: 15,
@@ -44,21 +44,21 @@ export const fakeOrders: Order[] = [
     cart: [
       {
         productID: 7,
-        name: "Banh Chung",
+        productName: "Banh Chung",
         quantity: 3,
         unitPrice: 16,
         totalPrice: 48,
       },
       {
         productID: 5,
-        name: "Banh Chuoi",
+        productName: "Banh Chuoi",
         quantity: 2,
         unitPrice: 16,
         totalPrice: 32,
       },
       {
         productID: 3,
-        name: "Banh Dau Xanh",
+        productName: "Banh Dau Xanh",
         quantity: 1,
         unitPrice: 15,
         totalPrice: 15,
@@ -78,21 +78,21 @@ export const fakeOrders: Order[] = [
     cart: [
       {
         productID: 7,
-        name: "Banh Chung",
+        productName: "Banh Chung",
         quantity: 3,
         unitPrice: 16,
         totalPrice: 48,
       },
       {
         productID: 5,
-        name: "Banh Chuoi",
+        productName: "Banh Chuoi",
         quantity: 2,
         unitPrice: 16,
         totalPrice: 32,
       },
       {
         productID: 3,
-        name: "Banh Dau Xanh",
+        productName: "Banh Dau Xanh",
         quantity: 1,
         unitPrice: 15,
         totalPrice: 15,

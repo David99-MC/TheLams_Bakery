@@ -9,7 +9,7 @@ export async function getMenu() {
 }
 
 export async function getOrderById(id: string) {
-  console.log("hello from server api:", BASE_URL + `order/${id}`)
+  console.log("hello from api_server")
   const res = await fetch(BASE_URL + `order/${id}`)
   if (!res.ok) throw new Error("Can't find that order")
   const data = await res.json()

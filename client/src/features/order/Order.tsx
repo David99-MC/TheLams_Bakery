@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getOrderById } from "../../services/api_server"
 import Loader from "../../ui/Loader"
 import ErrorNode from "../../ui/ErrorNode"
+import { type Order } from "../../../../server/src/models/order"
 
 type cart = {
   productID: string
@@ -14,16 +15,54 @@ type cart = {
   totalPrice: number
 }
 
-function Order() {
-  // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
-  const { orderID } = useParams()
+const fakeData = {
+  _id: "123456",
+  status: "In oven",
+  customerName: "Buu",
+  phone: "123456789",
+  address: "Mesa, Az , USA",
+  priority: true,
+  estimatedDelivery: "2027-04-25T10:00:00",
+  cart: [
+    {
+      productID: "7",
+      productName: "Banh Chung",
+      quantity: 3,
+      unitPrice: 16,
+      totalPrice: 48,
+    },
+    {
+      productID: "5",
+      productName: "Banh Chuoi",
+      quantity: 2,
+      unitPrice: 16,
+      totalPrice: 32,
+    },
+    {
+      productID: "3",
+      productName: "Banh Deo",
+      quantity: 1,
+      unitPrice: 15,
+      totalPrice: 15,
+    },
+  ],
+  position: "-9.000,38.000",
+  orderPrice: 95,
+  priorityPrice: 19,
+}
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["order", orderID],
-    queryFn: orderID ? () => getOrderById(orderID) : undefined,
+function Order() {
+  const { orderId } = useParams()
+  // const { data, isLoading } = useQuery(["order", orderId], () =>
+  //   getOrderById(orderId || "")
+  // )
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["order", orderId],
+    queryFn: () => getOrderById(orderId || ""),
   })
+
   console.log("data:", data)
-  // console.log("order:", order, "error:", error)
 
   const {
     _id,
@@ -33,15 +72,17 @@ function Order() {
     orderPrice,
     estimatedDelivery,
     cart,
-  } = data
+  } = fakeData
 
   const deliveryIn = calcMinutesLeft(estimatedDelivery)
 
   return (
     <>
       {isLoading && <Loader />}
-      {error !== null && <ErrorNode message="Can't find your order 😢" />}
-      {!isLoading && error === null && (
+      {/* {data?.message !== null && (
+        <ErrorNode message="Can't find your order 😢" />
+      )} */}
+      {fakeData !== null && (
         <div className="space-y-8 px-5 py-6">
           <div className="item-center flex flex-wrap justify-between gap-3">
             <h2 className="text-xl font-bold">Order #{_id} status</h2>
@@ -76,10 +117,10 @@ function Order() {
           </ul>
 
           <div className="bg-stone-200 p-4">
-            <p className="text-sm font-medium">Price pizza: ${orderPrice}</p>
+            <p className="text-sm font-medium">Products: ${orderPrice}</p>
             {priority && (
               <p className="text-sm font-medium">
-                Price priority: ${priorityPrice}
+                Priority order: ${priorityPrice}
               </p>
             )}
             <p className="font-bold">
