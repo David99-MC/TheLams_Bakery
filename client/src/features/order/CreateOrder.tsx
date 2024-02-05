@@ -1,15 +1,21 @@
 import { useState } from "react"
 import Button from "../../ui/Button"
+import { useAppSelector } from "../../utils/reduxHooks"
 
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const username = useAppSelector((state) => state.user.fullName)
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+  }
 
   return (
     <div className="px-4 py-6">
       <h2 className="mb-6 text-xl font-semibold">Ready to order? Let's go!</h2>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center ">
           <label className="sm:basis-40">First Name</label>
           <input
@@ -17,6 +23,7 @@ function CreateOrder() {
             className="input grow"
             name="customer"
             placeholder="John Doe"
+            defaultValue={username}
             required
           />
         </div>
@@ -43,7 +50,7 @@ function CreateOrder() {
           />
         </div>
 
-        <div className="mb-10 flex items-center gap-4">
+        <div className="mb-10 flex items-center gap-3">
           <input
             type="checkbox"
             className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
@@ -52,7 +59,7 @@ function CreateOrder() {
             value={`${withPriority}`}
             onChange={(e) => setWithPriority(e.target.checked)}
           />
-          <label htmlFor="priority">Want to give your order priority?</label>
+          <label htmlFor="priority">Make this order priority</label>
         </div>
 
         <div>

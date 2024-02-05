@@ -79,10 +79,10 @@ function Order() {
   return (
     <>
       {isLoading && <Loader />}
-      {/* {data?.message !== null && (
+      {(fakeData === null || data?.message !== null) && (
         <ErrorNode message="Can't find your order 😢" />
-      )} */}
-      {fakeData !== null && (
+      )}
+      {fakeData !== null && data?.message === null && (
         <div className="space-y-8 px-5 py-6">
           <div className="item-center flex flex-wrap justify-between gap-3">
             <h2 className="text-xl font-bold">Order #{_id} status</h2>

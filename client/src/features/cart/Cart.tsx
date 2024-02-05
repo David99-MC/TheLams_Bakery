@@ -1,13 +1,14 @@
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
+import { useAppSelector } from "../../utils/reduxHooks"
 import CartItem from "./CartItem"
 
-// type CartItemProp = {
-//   productID: string
-//   name: string
-//   quantity: number
-//   totalPrice: number
-// }
+type CartItem = {
+  productID: string
+  name: string
+  quantity: number
+  totalPrice: number
+}
 
 const fakeCartItems = [
   {
@@ -37,16 +38,17 @@ const fakeCartItems = [
 ]
 
 function Cart() {
+  const username = useAppSelector((state) => state.user.fullName)
   return (
     <div className="mx-6 my-4">
       <LinkButton to="/menu">&larr; Back to menu</LinkButton>
 
       <div className="my-6">
         <h2 className="font-bold uppercase text-stone-700">
-          Your cart, %NAME HERE%
+          Please review your cart, {username}
         </h2>
         <ul className="divide-y divide-stone-300 border-b">
-          {fakeCartItems.map((item) => (
+          {fakeCartItems.map((item: CartItem) => (
             <CartItem key={item.productID} {...item} />
           ))}
         </ul>

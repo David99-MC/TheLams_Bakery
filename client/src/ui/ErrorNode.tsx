@@ -6,7 +6,7 @@ function ErrorNode({ message }: { message: string }) {
   return (
     <>
       <div className="my-10 space-y-4 bg-stone-300 p-8">
-        <h1 className="text-2xl font-semibold">Something went wrong 😢</h1>
+        <h1 className="text-2xl font-semibold">Something went wrong...</h1>
         <p>{message}</p>
       </div>
       <button
