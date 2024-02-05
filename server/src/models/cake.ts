@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, type Model } from "mongoose";
 
 export type Cake = {
   _id?: string;
@@ -19,6 +19,6 @@ const CakeSchema = new Schema<Cake>({
   soldOut: Boolean,
 });
 
-const Cake = model<Cake>("Cake", CakeSchema);
+const Cake: Model<Cake> = model("Cake", CakeSchema);
 
 export default Cake;

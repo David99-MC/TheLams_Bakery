@@ -1,10 +1,10 @@
-import type React from "react"
 import { useState } from "react"
 
 function SearchOrder() {
   const [searchQuery, setsearchQuery] = useState("")
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    // TODO: navigate to /order
     setsearchQuery("")
   }
   return (

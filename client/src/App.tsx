@@ -7,7 +7,8 @@ import Menu from "./features/menu/Menu"
 import Cart from "./features/cart/Cart"
 import CreateOrder from "./features/order/CreateOrder"
 import AppLayout from "./ui/AppLayout"
-import Order from "./features/order/Order"
+// import Order from "./features/order/Order"
+import ErrorNode from "./ui/ErrorNode"
 
 const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
@@ -29,7 +30,14 @@ function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/order/new" element={<CreateOrder />} />
-            <Route path="/order/:orderID" element={<Order />} />
+            {/* <Route path="/order/:orderID" element={<Order />} /> */}{" "}
+            {/** Does NOT work atm */}
+            <Route
+              path="*"
+              element={
+                <ErrorNode message="Can't find what you're looking for..." />
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

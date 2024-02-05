@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "dotenv";
 import Cake from "./models/cake";
+import Order from "./models/order";
 config();
 
 const PORT = 5000;
@@ -43,10 +44,17 @@ app.get("/menu", async (req: Request, res: Response) => {
   res.json(cakes);
 });
 
-app.post("/bread", (req: Request, res: Response) => {
-  console.log(`request body: `, req.body);
-  res.send(req.body);
+app.get("/order/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const order = await Order.findById(id);
+  console.log("received get request at /order/", id);
+  res.json(order);
 });
+
+// app.post("/bread", (req: Request, res: Response) => {
+//   console.log(`request body: `, req.body);
+//   res.send(req.body);
+// });
 
 app.listen(PORT, () => {
   console.log(`APP IS LISTENNING ${PORT}`);

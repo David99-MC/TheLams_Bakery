@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import Cake from "../models/Cake";
 
 import { cakes } from "./cakes";
-
+import { fakeOrders } from "./orders";
+import Order from "../models/order";
 mongoose
   .connect("mongodb://127.0.0.1:27017/TheLams_Bakery")
   .then(() => {
@@ -25,6 +26,11 @@ async function seedDB() {
       soldOut: false,
     });
     await cake.save();
+  }
+
+  for (let fakeOrder of fakeOrders) {
+    const order = new Order(fakeOrder);
+    await order.save();
   }
 }
 
