@@ -2,12 +2,14 @@ import { Link } from "react-router-dom"
 
 type ButtonProps = {
   children: React.ReactNode
+  onAddItem?: React.MouseEventHandler<HTMLButtonElement>
+  // onClearCart?: React.MouseEventHandler<HTMLButtonElement>
   disabled?: boolean
   to?: string
   type: "primary" | "secondary" | "small"
 }
 
-function Button({ children, disabled, to, type }: ButtonProps) {
+function Button({ children, disabled, to, type, onAddItem }: ButtonProps) {
   const base: string =
     "inline-block rounded-full bg-yellow-400  font-semibold outline-none transition-colors duration-300 hover:bg-yellow-300 focus:bg-yellow-300 focus:ring focus:ring-yellow-300 focus:ring-offset-2 disabled:cursor-not-allowed"
 
@@ -25,7 +27,7 @@ function Button({ children, disabled, to, type }: ButtonProps) {
       </Link>
     )
   return (
-    <button disabled={disabled} className={btnType[type]}>
+    <button onClick={onAddItem} disabled={disabled} className={btnType[type]}>
       {children}
     </button>
   )

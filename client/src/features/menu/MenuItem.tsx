@@ -1,8 +1,18 @@
 import type { Cake } from "../../../../server/src/models/cake"
 import Button from "../../ui/Button"
+import { useAppDispatch } from "../../utils/reduxHooks"
+import type { CartItemType } from "../cart/Cart"
+import { addItem } from "../cart/cartSlice"
 
 function MenuItem(item: Cake) {
-  const { vietnameseName, unitPrice, ingredients, soldOut, imgUrl } = item
+  const { _id, vietnameseName, unitPrice, ingredients, soldOut, imgUrl } = item
+  const cartItem: CartItemType = {
+    productID: _id || "",
+    productName: vietnameseName,
+    quantity: 1,
+    unitPrice,
+  }
+  const dispatch = useAppDispatch()
 
   return (
     <li className={`flex gap-4 py-2 ${soldOut ? "opacity-70 grayscale" : ""}`}>
@@ -20,7 +30,11 @@ function MenuItem(item: Cake) {
               Sold out
             </p>
           )}
-          {!soldOut && <Button type="small">Add to cart</Button>}
+          {!soldOut && (
+            <Button onAddItem={() => dispatch(addItem(cartItem))} type="small">
+              Add to cart
+            </Button>
+          )}
         </div>
       </div>
     </li>

@@ -2,11 +2,11 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import type { CartItemType } from "./Cart"
 
 type CartState = {
-  cart: CartItemType[]
+  cartItems: CartItemType[]
 }
 
 const initialState: CartState = {
-  cart: [],
+  cartItems: [],
 }
 
 const cartSlice = createSlice({
@@ -14,27 +14,39 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<CartItemType>) => {
-      state.cart.push(action.payload)
+      const itemToAdd: CartItemType = action.payload
+      const item = state.cartItems.find(
+        (item) => item.productID === itemToAdd.productID
+      )
+      if (item) {
+        item.quantity++
+      } else {
+        state.cartItems.push(itemToAdd)
+      }
     },
     deleteItem: (state, action: PayloadAction<string>) => {
-      state.cart = state.cart.filter(
+      state.cartItems = state.cartItems.filter(
         (item) => item.productID !== action.payload
       )
     },
     incItem: (state, action: PayloadAction<string>) => {
-      const item = state.cart.find((item) => item.productID === action.payload)
+      const item = state.cartItems.find(
+        (item) => item.productID === action.payload
+      )
       if (item && item.quantity > 0) {
         item.quantity += 1
       }
     },
     decItem: (state, action: PayloadAction<string>) => {
-      const item = state.cart.find((item) => item.productID === action.payload)
+      const item = state.cartItems.find(
+        (item) => item.productID === action.payload
+      )
       if (item && item.quantity > 0) {
         item.quantity -= 1
       }
     },
     clearCart: (state) => {
-      state.cart = []
+      state.cartItems = []
     },
   },
 })
