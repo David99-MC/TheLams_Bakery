@@ -3,13 +3,24 @@ import { Link } from "react-router-dom"
 type ButtonProps = {
   children: React.ReactNode
   onAddItem?: React.MouseEventHandler<HTMLButtonElement>
-  // onClearCart?: React.MouseEventHandler<HTMLButtonElement>
+  onClearCart?: React.MouseEventHandler<HTMLButtonElement>
+  onDeleteItem?: React.MouseEventHandler<HTMLButtonElement>
   disabled?: boolean
   to?: string
   type: "primary" | "secondary" | "small"
+  role?: "addItem" | "deleteItem" | "clearCart"
 }
 
-function Button({ children, disabled, to, type, onAddItem }: ButtonProps) {
+function Button({
+  children,
+  disabled,
+  to,
+  type,
+  role,
+  onAddItem,
+  onClearCart,
+  onDeleteItem,
+}: ButtonProps) {
   const base: string =
     "inline-block rounded-full bg-yellow-400  font-semibold outline-none transition-colors duration-300 hover:bg-yellow-300 focus:bg-yellow-300 focus:ring focus:ring-yellow-300 focus:ring-offset-2 disabled:cursor-not-allowed"
 
@@ -27,9 +38,40 @@ function Button({ children, disabled, to, type, onAddItem }: ButtonProps) {
       </Link>
     )
   return (
-    <button onClick={onAddItem} disabled={disabled} className={btnType[type]}>
-      {children}
-    </button>
+    <>
+      {role === undefined && (
+        <button disabled={disabled} className={btnType[type]}>
+          {children}
+        </button>
+      )}
+      {role === "addItem" && (
+        <button
+          onClick={onAddItem}
+          disabled={disabled}
+          className={btnType[type]}
+        >
+          {children}
+        </button>
+      )}
+      {role === "clearCart" && (
+        <button
+          onClick={onClearCart}
+          disabled={disabled}
+          className={btnType[type]}
+        >
+          {children}
+        </button>
+      )}
+      {role === "deleteItem" && (
+        <button
+          onClick={onDeleteItem}
+          disabled={disabled}
+          className={btnType[type]}
+        >
+          {children}
+        </button>
+      )}
+    </>
   )
 }
 

@@ -1,9 +1,12 @@
 import Button from "../../ui/Button"
+import { useAppDispatch } from "../../utils/reduxHooks"
 import type { CartItemType } from "./Cart"
+import { deleteItem } from "./cartSlice"
 
 function CartItem(item: CartItemType) {
-  const { productName, unitPrice, quantity } = item
+  const { productID, productName, unitPrice, quantity } = item
   const totalPrice = (unitPrice * quantity).toFixed(2)
+  const dispatch = useAppDispatch()
 
   return (
     <li className="py-3 sm:flex sm:items-center sm:justify-between">
@@ -12,7 +15,13 @@ function CartItem(item: CartItemType) {
       </p>
       <div className="flex items-center justify-between sm:gap-4">
         <p className="text-sm font-bold">${totalPrice}</p>
-        <Button type="small">Delete item</Button>
+        <Button
+          type="small"
+          role="deleteItem"
+          onDeleteItem={() => dispatch(deleteItem(productID))}
+        >
+          Delete item
+        </Button>
       </div>
     </li>
   )

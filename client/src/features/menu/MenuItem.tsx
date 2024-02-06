@@ -30,11 +30,14 @@ function MenuItem(item: Cake) {
               Sold out
             </p>
           )}
-          {!soldOut && (
-            <Button onAddItem={() => dispatch(addItem(cartItem))} type="small">
-              Add to cart
-            </Button>
-          )}
+          <Button
+            disabled={soldOut}
+            onAddItem={() => dispatch(addItem(cartItem))}
+            type="small"
+            role="addItem"
+          >
+            Add to cart
+          </Button>
         </div>
       </div>
     </li>

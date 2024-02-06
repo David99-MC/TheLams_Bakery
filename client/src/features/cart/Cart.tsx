@@ -1,8 +1,9 @@
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
-import { useAppSelector } from "../../utils/reduxHooks"
+import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
 import CartItem from "./CartItem"
 import EmptyCart from "./EmptyCart"
+import { clearCart, getCart } from "./cartSlice"
 
 // remove productID since mongo already gave an _id field
 export type CartItemType = {
@@ -13,7 +14,8 @@ export type CartItemType = {
 }
 
 function Cart() {
-  const cartItems = useAppSelector((state) => state.cart.cartItems)
+  const cartItems = useAppSelector(getCart)
+  const dispatch = useAppDispatch()
 
   return (
     <div className="mx-6 my-4">
@@ -35,7 +37,13 @@ function Cart() {
             <Button type="primary" to="/order/new">
               Check out
             </Button>
-            <Button type="secondary">Clear cart</Button>
+            <Button
+              type="secondary"
+              role="clearCart"
+              onClearCart={() => dispatch(clearCart())}
+            >
+              Clear cart
+            </Button>
           </div>
         </>
       ) : (

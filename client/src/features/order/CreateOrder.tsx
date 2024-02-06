@@ -9,6 +9,7 @@ function CreateOrder() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    console.log("submited")
   }
 
   return (
