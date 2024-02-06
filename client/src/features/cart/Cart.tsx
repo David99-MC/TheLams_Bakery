@@ -3,37 +3,37 @@ import LinkButton from "../../ui/LinkButton"
 import { useAppSelector } from "../../utils/reduxHooks"
 import CartItem from "./CartItem"
 
-type CartItem = {
+export type CartItemType = {
   productID: string
-  name: string
+  productName: string
+  unitPrice: number
   quantity: number
-  totalPrice: number
 }
-
-const fakeCartItems = [
+// remove productID since mongo already gave an _id field
+const fakeCartItems: CartItemType[] = [
   {
     productID: "1",
-    name: "Banh Chung",
+    productName: "Banh Chung",
+    unitPrice: 12.99,
     quantity: 2,
-    totalPrice: 12.99,
   },
   {
     productID: "2",
-    name: "Banh Deo",
+    productName: "Banh Deo",
+    unitPrice: 15.99,
     quantity: 3,
-    totalPrice: 15.99,
   },
   {
     productID: "3",
-    name: "Banh Dau Xanh",
+    productName: "Banh Dau Xanh",
+    unitPrice: 10.99,
     quantity: 1,
-    totalPrice: 10.99,
   },
   {
     productID: "4",
-    name: "Banh Chuoi",
+    productName: "Banh Chuoi",
+    unitPrice: 17.99,
     quantity: 4,
-    totalPrice: 17.99,
   },
 ]
 
@@ -48,7 +48,7 @@ function Cart() {
           Please review your cart, {username}
         </h2>
         <ul className="divide-y divide-stone-300 border-b">
-          {fakeCartItems.map((item: CartItem) => (
+          {fakeCartItems.map((item: CartItemType) => (
             <CartItem key={item.productID} {...item} />
           ))}
         </ul>

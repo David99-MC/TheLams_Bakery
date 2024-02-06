@@ -1,4 +1,5 @@
 import { Schema, model, type Model } from "mongoose";
+import type { CartItemType } from "../../../client/src/features/cart/Cart";
 
 export type Order = {
   _id?: string;
@@ -8,13 +9,7 @@ export type Order = {
   address: string;
   priority: boolean;
   estimatedDelivery: string;
-  cart: {
-    productID: number; // ref from Cake item
-    productName: string;
-    quantity: number;
-    unitPrice: number;
-    totalPrice: number;
-  }[];
+  cart: CartItemType[];
   position?: string;
   orderPrice: number;
   priorityPrice: number;
@@ -36,7 +31,6 @@ const OrderSchema = new Schema<Order>({
       productName: String,
       quantity: Number,
       unitPrice: Number,
-      totalPrice: Number,
     },
   ],
   position: String,

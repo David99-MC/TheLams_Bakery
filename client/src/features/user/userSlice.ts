@@ -8,7 +8,7 @@ const initialState: UserState = {
   fullName: "",
 }
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
@@ -18,6 +18,7 @@ export const userSlice = createSlice({
   },
 })
 
+// action creators to be used by other components
 export const { updateFullName } = userSlice.actions
 
 export default userSlice.reducer

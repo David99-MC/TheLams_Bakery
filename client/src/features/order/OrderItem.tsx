@@ -1,11 +1,8 @@
-type item = {
-  productName: string
-  quantity: number
-  totalPrice: number
-}
+import type { CartItemType } from "../cart/Cart"
 
-function OrderItem(item: item) {
-  const { quantity, productName, totalPrice } = item
+function OrderItem(item: CartItemType) {
+  const { quantity, productName, unitPrice } = item
+  const totalPrice = (unitPrice * quantity).toFixed(2)
 
   return (
     <li className="py-3">

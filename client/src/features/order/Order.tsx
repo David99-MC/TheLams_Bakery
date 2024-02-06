@@ -6,14 +6,7 @@ import { getOrderById } from "../../services/api_server"
 import Loader from "../../ui/Loader"
 import ErrorNode from "../../ui/ErrorNode"
 import { type Order } from "../../../../server/src/models/order"
-
-type cart = {
-  productID: string
-  productName: string
-  quantity: number
-  unitPrice: number
-  totalPrice: number
-}
+import type { CartItemType } from "../cart/Cart"
 
 const fakeData = {
   _id: "123456",
@@ -53,9 +46,6 @@ const fakeData = {
 
 function Order() {
   const { orderId } = useParams()
-  // const { data, isLoading } = useQuery(["order", orderId], () =>
-  //   getOrderById(orderId || "")
-  // )
 
   const { data, isLoading } = useQuery({
     queryKey: ["order", orderId],
@@ -111,7 +101,7 @@ function Order() {
           </div>
 
           <ul className="divide-y divide-stone-200 border-b border-t">
-            {cart.map((item: cart) => (
+            {cart.map((item: CartItemType) => (
               <OrderItem key={item.productID} {...item} />
             ))}
           </ul>

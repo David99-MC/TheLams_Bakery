@@ -1,14 +1,9 @@
 import Button from "../../ui/Button"
+import type { CartItemType } from "./Cart"
 
-type CartItemProp = {
-  productID: string
-  name: string
-  quantity: number
-  totalPrice: number
-}
-
-function CartItem(item: CartItemProp) {
-  const { name, quantity, totalPrice } = item
+function CartItem(item: CartItemType) {
+  const { name, unitPrice, quantity } = item
+  const totalPrice = (unitPrice * quantity).toFixed(2)
 
   return (
     <li className="py-3 sm:flex sm:items-center sm:justify-between">
