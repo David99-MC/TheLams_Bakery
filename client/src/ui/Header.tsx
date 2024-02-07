@@ -1,12 +1,21 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Username from "../features/user/Username"
 import SearchOrder from "../features/order/SearchOrder"
-import { useAppSelector } from "../utils/reduxHooks"
-import LinkButton from "./LinkButton"
+import { useAppDispatch, useAppSelector } from "../utils/reduxHooks"
+import Button from "./Button"
+import { clearUser } from "../features/user/userSlice"
 
 function Header() {
   const username = useAppSelector((state) => state.user.fullName)
   const authenticated = useAppSelector((state) => state.user.authenticated)
+
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  function handleSignOut() {
+    dispatch(clearUser())
+    navigate("/home")
+  }
   return (
     <header className="flex items-center justify-between bg-yellow-500 px-3 py-4">
       <Link className="font-semibold uppercase tracking-widest" to="/">
@@ -15,12 +24,16 @@ function Header() {
 
       <SearchOrder />
 
-      <div className="flex gap-3">
-        {username ? <Username /> : <LinkButton to="/login">Login</LinkButton>}
+      <div className="flex items-center gap-3">
+        {username && <Username />}
         {username && authenticated ? (
-          <LinkButton to="/home">Sign out</LinkButton>
+          <Button onClick={handleSignOut} type="small">
+            Sign out
+          </Button>
         ) : (
-          <LinkButton to="/login">Sign in</LinkButton>
+          <Button type="small" to="/login">
+            Sign in
+          </Button>
         )}
       </div>
     </header>

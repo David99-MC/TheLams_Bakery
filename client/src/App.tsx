@@ -11,6 +11,7 @@ import Order from "./features/order/Order"
 import ErrorNode from "./ui/ErrorNode"
 import Login from "./features/user/Login"
 import Register from "./features/user/Register"
+import ProtectedRoutes from "./features/protectedRoutes/ProtectedRoutes"
 
 const queryClient: QueryClient = new QueryClient()
 
@@ -26,10 +27,21 @@ function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/order/new" element={<CreateOrder />} />
-            {/** Does NOT work atm */}
             <Route path="/order/:orderId" element={<Order />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
+            <Route
+              path="/staff"
+              element={
+                <ProtectedRoutes>
+                  {/* Staff layout */}
+                  <div>staff routes</div>
+                </ProtectedRoutes>
+              }
+            >
+              <Route index element={<Navigate replace to="login" />} />
+              {/* /staff/{ComponentName} */}
+            </Route>
             <Route
               path="*"
               element={

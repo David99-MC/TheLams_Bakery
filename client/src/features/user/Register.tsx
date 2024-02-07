@@ -21,7 +21,7 @@ function Register() {
     mutate(data)
   }
   return (
-    <div className="mt-48 flex flex-col items-center justify-center gap-2 rounded-md bg-white px-0 py-10">
+    <div className="mt-32 flex flex-col items-center justify-center gap-2 rounded-md bg-white px-0 py-10">
       <p className="text-lg font-bold tracking-widest">The Lam's Bakery</p>
       <form
         onSubmit={handleSubmit(onFormSubmit)}

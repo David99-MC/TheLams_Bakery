@@ -15,13 +15,13 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateUser: (
-      state,
+      state: UserState,
       action: PayloadAction<{ username: string; authenticated: boolean }>
     ) => {
       state.fullName = action.payload.username
       state.authenticated = action.payload.authenticated
     },
-    clearUser: (state) => {
+    clearUser: (state: UserState) => {
       state.fullName = ""
       state.authenticated = false
     },
@@ -29,6 +29,6 @@ const userSlice = createSlice({
 })
 
 // action creators to be used by other components
-export const { updateUser } = userSlice.actions
+export const { updateUser, clearUser } = userSlice.actions
 
 export default userSlice.reducer
