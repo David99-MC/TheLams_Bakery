@@ -37,11 +37,7 @@ function Cart() {
             <Button type="primary" to="/order/new">
               Check out
             </Button>
-            <Button
-              type="secondary"
-              role="clearCart"
-              onClearCart={() => dispatch(clearCart())}
-            >
+            <Button type="secondary" onClick={() => dispatch(clearCart())}>
               Clear cart
             </Button>
           </div>

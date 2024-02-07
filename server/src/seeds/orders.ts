@@ -1,12 +1,11 @@
-import type { Order } from "../models/order";
+import { OrderStatus, type Order } from "../models/order";
 export const fakeOrders: Order[] = [
   {
-    status: "In oven",
+    status: OrderStatus["In Progress"],
     customerName: "Buu",
     phone: "123456789",
     address: "Mesa, Az , USA",
     priority: true,
-    estimatedDelivery: "2027-04-25T10:00:00",
     cart: [
       {
         productID: "7",
@@ -27,17 +26,15 @@ export const fakeOrders: Order[] = [
         unitPrice: 15,
       },
     ],
-    position: "-9.000,38.000",
     orderPrice: 95,
     priorityPrice: 19,
   },
   {
-    status: "Received",
+    status: OrderStatus["Delivered"],
     customerName: "David",
     phone: "123456789",
     address: "Mesa, Az , USA",
     priority: false,
-    estimatedDelivery: "2027-04-25T10:00:00",
     cart: [
       {
         productID: "7",
@@ -58,17 +55,15 @@ export const fakeOrders: Order[] = [
         unitPrice: 15,
       },
     ],
-    position: "-9.000,38.000",
     orderPrice: 95,
     priorityPrice: 19,
   },
   {
-    status: "Delivered",
+    status: OrderStatus["Delivered"],
     customerName: "Kim",
     phone: "123456789",
     address: "Mesa, Az , USA",
     priority: true,
-    estimatedDelivery: "2027-04-25T10:00:00",
     cart: [
       {
         productID: "7",
@@ -89,7 +84,6 @@ export const fakeOrders: Order[] = [
         unitPrice: 15,
       },
     ],
-    position: "-9.000,38.000",
     orderPrice: 95,
     priorityPrice: 19,
   },

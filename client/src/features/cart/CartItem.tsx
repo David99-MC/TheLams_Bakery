@@ -1,7 +1,7 @@
 import Button from "../../ui/Button"
 import { useAppDispatch } from "../../utils/reduxHooks"
 import type { CartItemType } from "./Cart"
-import { deleteItem } from "./cartSlice"
+import { decItem, deleteItem, incItem } from "./cartSlice"
 
 function CartItem(item: CartItemType) {
   const { productID, productName, unitPrice, quantity } = item
@@ -15,11 +15,15 @@ function CartItem(item: CartItemType) {
       </p>
       <div className="flex items-center justify-between sm:gap-4">
         <p className="text-sm font-bold">${totalPrice}</p>
-        <Button
-          type="small"
-          role="deleteItem"
-          onDeleteItem={() => dispatch(deleteItem(productID))}
-        >
+        <div className="flex items-center gap-1 md:gap-2">
+          <Button onClick={() => dispatch(incItem(productID))} type="round">
+            +
+          </Button>
+          <Button onClick={() => dispatch(decItem(productID))} type="round">
+            &minus;
+          </Button>
+        </div>
+        <Button type="small" onClick={() => dispatch(deleteItem(productID))}>
           Delete item
         </Button>
       </div>

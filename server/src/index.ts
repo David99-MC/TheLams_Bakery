@@ -54,6 +54,13 @@ app.get("/order/:id", async (req: Request, res: Response) => {
   }
 });
 
+app.post("/order", async (req: Request, res: Response) => {
+  const order = new Order(req.body);
+  await order.save();
+
+  res.json(order);
+});
+
 // app.post("/bread", (req: Request, res: Response) => {
 //   console.log(`request body: `, req.body);
 //   res.send(req.body);

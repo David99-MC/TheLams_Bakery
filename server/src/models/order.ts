@@ -1,16 +1,23 @@
 import { Schema, model, type Model } from "mongoose";
 import type { CartItemType } from "../../../client/src/features/cart/Cart";
 
+export enum OrderStatus {
+  // "Unknown" | "Received" | "In Progress" | "In Delivery" | "Delivered"
+  "Unknown" = "Unknown",
+  "Received" = "Received",
+  "In Progress" = "In Progress",
+  "In Delivery" = "In Delivery",
+  "Delivered" = "Delivered",
+}
+
 export type Order = {
   _id?: string;
-  status: "Received" | "In oven" | "In Delivery" | "Delivered";
+  status: OrderStatus;
   customerName: string;
   phone: string;
   address: string;
   priority: boolean;
-  estimatedDelivery: string;
   cart: CartItemType[];
-  position?: string;
   orderPrice: number;
   priorityPrice: number;
 };
@@ -18,13 +25,12 @@ export type Order = {
 const OrderSchema = new Schema<Order>({
   status: {
     type: String,
-    enum: ["Received", "In oven", "In Delivery", "Delivered"],
+    enum: ["Received", "In Progress", "In Delivery", "Delivered"],
   },
   customerName: { type: String, required: true },
   phone: { type: String, required: true },
   address: { type: String, required: true },
   priority: Boolean,
-  estimatedDelivery: String,
   cart: [
     {
       productID: String,
@@ -33,9 +39,8 @@ const OrderSchema = new Schema<Order>({
       unitPrice: Number,
     },
   ],
-  position: String,
   orderPrice: { type: Number, required: true },
-  priorityPrice: { type: Number, required: true },
+  priorityPrice: Number,
 });
 
 const Order: Model<Order> = model("order", OrderSchema);

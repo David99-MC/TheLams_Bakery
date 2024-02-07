@@ -32,9 +32,8 @@ function MenuItem(item: Cake) {
           )}
           <Button
             disabled={soldOut}
-            onAddItem={() => dispatch(addItem(cartItem))}
+            onClick={() => dispatch(addItem(cartItem))}
             type="small"
-            role="addItem"
           >
             Add to cart
           </Button>
