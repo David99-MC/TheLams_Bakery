@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { config } from "dotenv";
 import Cake from "./models/cake";
 import Order from "./models/order";
+import User from "./models/user";
 config();
 
 const PORT = 5000;
@@ -61,10 +62,25 @@ app.post("/order", async (req: Request, res: Response) => {
   res.json(order);
 });
 
-// app.post("/bread", (req: Request, res: Response) => {
-//   console.log(`request body: `, req.body);
-//   res.send(req.body);
-// });
+app.post("/user", async (req: Request, res: Response) => {
+  // console.log(`request body: `, req.body);
+  const user = new User(req.body);
+  user.save();
+  res.json(user);
+});
+
+app.get("/user/:username", async (req: Request, res: Response, next) => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
+    if (!user) {
+      throw new Error("wrong username or password");
+    }
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`APP IS LISTENNING ${PORT}`);

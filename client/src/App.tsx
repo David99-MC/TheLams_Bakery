@@ -9,6 +9,8 @@ import CreateOrder from "./features/order/CreateOrder"
 import AppLayout from "./ui/AppLayout"
 import Order from "./features/order/Order"
 import ErrorNode from "./ui/ErrorNode"
+import Login from "./features/user/Login"
+import Register from "./features/user/Register"
 
 const queryClient: QueryClient = new QueryClient()
 
@@ -26,6 +28,8 @@ function App() {
             <Route path="/order/new" element={<CreateOrder />} />
             {/** Does NOT work atm */}
             <Route path="/order/:orderId" element={<Order />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Register />} />
             <Route
               path="*"
               element={
