@@ -34,7 +34,7 @@ function App() {
               path="/staff"
               element={
                 <ProtectedRoutes>
-                  {/* Staff layout */}
+                  {/* TODO: Staff layout */}
                   <div>staff routes</div>
                 </ProtectedRoutes>
               }

@@ -15,7 +15,7 @@ export async function getOrderById(id: string) {
   const res = await fetch(BASE_URL + `order/${id}`)
   if (!res.ok) throw new Error("Can't find that order")
   const data = await res.json()
-  return data
+  return data as Order
 }
 
 export async function createNewOrder(order: Order) {
@@ -36,6 +36,7 @@ type userInfo = {
   username: string
   password: string
 }
+
 export async function signUp(data: userInfo) {
   const salt = genSaltSync(10)
   const hash = hashSync(data.password, salt)

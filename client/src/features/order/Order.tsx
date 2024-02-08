@@ -1,61 +1,35 @@
 import { useParams } from "react-router-dom"
-// import { useQuery } from "@tanstack/react-query"
 
 import OrderItem from "./OrderItem"
-import { OrderStatus, type Order } from "../../../../server/src/models/order"
+import { type Order } from "../../../../server/src/models/order"
 import { getOrderById } from "../../services/api_server"
 
 import Loader from "../../ui/Loader"
 import ErrorNode from "../../ui/ErrorNode"
 import type { CartItemType } from "../cart/Cart"
-import { useEffect, useState } from "react"
-
-const initialState: Order = {
-  _id: "",
-  status: OrderStatus.Unknown,
-  customerName: "",
-  phone: "",
-  address: "",
-  priority: false,
-  cart: [],
-  orderPrice: 0,
-  priorityPrice: 0,
-}
+import { useQuery } from "@tanstack/react-query"
 
 function Order() {
   const { orderId } = useParams()
 
-  // const { data, isLoading, isSuccess } = useQuery({
-  //   queryKey: ["order", orderId],
-  //   queryFn: () => getOrderById(orderId || ""),
-  // })
+  const { data, isLoading } = useQuery({
+    queryKey: ["order", orderId],
+    queryFn: () => getOrderById(orderId || ""),
+  })
 
-  const [data, setData] = useState<Order>(initialState)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>("")
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setError("")
-        setIsLoading(true)
-        const res = await getOrderById(orderId || "")
-        setData(res)
-      } catch (error) {
-        setError(`Server error, refused to communicate`)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchData()
-  }, [orderId])
-
-  const { _id, status, priority, orderPrice, priorityPrice, cart } = data
+  // Not typed correctly
+  const {
+    _id,
+    status,
+    priority,
+    orderPrice = 0,
+    priorityPrice = 0,
+    cart = [],
+  } = data ?? {}
 
   if (isLoading) return <Loader />
   if (!data || (data && !data._id))
-    return (
-      <ErrorNode message={error || `Can't find your order # ${orderId} 😢`} />
-    )
+    return <ErrorNode message={`Can't find your order # ${orderId} 😢`} />
 
   return (
     <>
@@ -85,7 +59,7 @@ function Order() {
         </div>
 
         <ul className="divide-y divide-stone-200 border-b border-t">
-          {cart.map((item: CartItemType) => (
+          {cart?.map((item: CartItemType) => (
             <OrderItem key={item.productID} {...item} />
           ))}
         </ul>
