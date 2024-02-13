@@ -40,33 +40,50 @@ app.get("/", (req: Request, res: Response) => {
   res.send("hello from express with nodemon setup");
 });
 
-app.get("/menu", async (req: Request, res: Response) => {
-  const cakes = await Cake.find({});
-  res.json(cakes);
-});
-
-app.get("/order/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+app.get("/menu", async (req: Request, res: Response, next) => {
   try {
-    const order = await Order.findById(id);
-    res.json(order);
+    const menu = await Cake.find();
+    res.json(menu);
   } catch (err) {
-    res.json(err);
+    next(err);
   }
 });
 
-app.post("/order", async (req: Request, res: Response) => {
-  const order = new Order(req.body);
-  await order.save();
-
-  res.json(order);
+app.get("/order/:id", async (req: Request, res: Response, next) => {
+  const { id } = req.params;
+  try {
+    const order = await Order.findById(id);
+    if (!order) {
+      throw new Error("Order not found");
+    }
+    res.json(order);
+  } catch (err) {
+    next(err);
+  }
 });
 
-app.post("/user", async (req: Request, res: Response) => {
-  // console.log(`request body: `, req.body);
-  const user = new User(req.body);
-  user.save();
-  res.json(user);
+app.post("/order", async (req: Request, res: Response, next) => {
+  try {
+    const order = new Order(req.body);
+    await order.save();
+
+    res.json(order);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/user", async (req: Request, res: Response, next) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    if (!user) {
+      throw new Error("username has been taken");
+    }
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.get("/user/:username", async (req: Request, res: Response, next) => {

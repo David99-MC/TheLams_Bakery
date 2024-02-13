@@ -16,7 +16,7 @@ function Menu() {
         <Loader />
       ) : (
         <ul className="divide-y divide-stone-200">
-          {menuItems.map((item: Cake) => (
+          {menuItems?.map((item: Cake) => (
             <MenuItem key={item._id} {...item} />
           ))}
         </ul>

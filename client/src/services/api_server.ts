@@ -1,5 +1,6 @@
 import { compareSync, genSaltSync, hashSync } from "bcrypt-ts"
 import type { Order } from "../../../server/src/models/order"
+import type { Cake } from "../../../server/src/models/cake"
 
 const BASE_URL = "http://localhost:5000/"
 
@@ -8,7 +9,7 @@ export async function getMenu() {
   //the caller will catch this error
   if (!res.ok) throw new Error("Failed to fetch the menu")
   const data = await res.json()
-  return data
+  return data as Cake[]
 }
 
 export async function getOrderById(id: string) {

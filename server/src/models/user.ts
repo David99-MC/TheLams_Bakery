@@ -6,7 +6,7 @@ type UserType = {
 };
 
 const UserSchema = new Schema<UserType>({
-  username: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
   hash: { type: String, required: true },
 });
 
