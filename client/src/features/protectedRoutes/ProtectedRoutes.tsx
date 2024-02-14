@@ -4,7 +4,10 @@ import { useEffect } from "react"
 
 function ProtectedRoutes({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
-  const authenticated = useAppSelector((state) => state.user.authenticated)
+  const signedIn = useAppSelector((state) => state.user.signedIn)
+  const isAdmin = useAppSelector((state) => state.user.isAdmin)
+
+  const authenticated = signedIn && isAdmin
 
   useEffect(() => {
     if (!authenticated) {

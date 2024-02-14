@@ -1,29 +1,30 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 
 type UserState = {
-  fullName: string
-  authenticated: boolean
+  username: string
+  signedIn: boolean
+  isAdmin?: boolean
 }
 
 const initialState: UserState = {
-  fullName: "",
-  authenticated: false,
+  username: "",
+  signedIn: false,
+  isAdmin: false,
 }
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    updateUser: (
-      state: UserState,
-      action: PayloadAction<{ username: string; authenticated: boolean }>
-    ) => {
-      state.fullName = action.payload.username
-      state.authenticated = action.payload.authenticated
+    updateUser: (state: UserState, action: PayloadAction<UserState>) => {
+      state.username = action.payload.username
+      state.signedIn = action.payload.signedIn
+      state.isAdmin = action.payload.isAdmin
     },
     clearUser: (state: UserState) => {
-      state.fullName = ""
-      state.authenticated = false
+      state.username = ""
+      state.signedIn = false
+      state.isAdmin = false
     },
   },
 })

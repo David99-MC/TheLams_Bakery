@@ -1,4 +1,3 @@
-import { compareSync, genSaltSync, hashSync } from "bcrypt-ts"
 import type { Order } from "../../../server/src/models/order"
 import type { Cake } from "../../../server/src/models/cake"
 
@@ -39,29 +38,31 @@ type userInfo = {
 }
 
 export async function signUp(data: userInfo) {
-  const salt = genSaltSync(10)
-  const hash = hashSync(data.password, salt)
-
-  const res = await fetch(BASE_URL + "user", {
+  const res = await fetch(BASE_URL + "register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username: data.username, hash }),
+    body: JSON.stringify(data),
   })
   if (!res.ok) {
-    throw new Error("Error trying to sign up")
+    throw new Error("username already exists")
   }
   return res.json()
 }
 
 export async function login(data: userInfo) {
-  const requestedUser = await fetch(BASE_URL + `user/${data.username}`, {
+  const requestedUser = await fetch(BASE_URL + `login`, {
     method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
   })
-  if (!requestedUser.ok) return false
+  if (!requestedUser.ok) return {}
 
+  //
   const user = await requestedUser.json()
 
-  return user.hash && compareSync(data.password, user.hash)
+  return user
 }

@@ -22,7 +22,7 @@ type OrderFormData = {
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState<boolean>(false)
 
-  const username = useAppSelector((state) => state.user.fullName)
+  const username = useAppSelector((state) => state.user.username)
   const navigate = useNavigate()
 
   const { register, handleSubmit } = useForm<OrderFormData>()

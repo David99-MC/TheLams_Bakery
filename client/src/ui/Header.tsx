@@ -6,8 +6,8 @@ import Button from "./Button"
 import { clearUser } from "../features/user/userSlice"
 
 function Header() {
-  const username = useAppSelector((state) => state.user.fullName)
-  const authenticated = useAppSelector((state) => state.user.authenticated)
+  const username = useAppSelector((state) => state.user.username)
+  const signedIn = useAppSelector((state) => state.user.signedIn)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -26,7 +26,7 @@ function Header() {
 
       <div className="flex items-center gap-3">
         {username && <Username />}
-        {username && authenticated ? (
+        {username && signedIn ? (
           <Button onClick={handleSignOut} type="small">
             Sign out
           </Button>

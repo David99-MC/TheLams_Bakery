@@ -21,7 +21,7 @@ function Login() {
     setIsLoading(true)
     const authenticatedUser = await login(data)
     if (authenticatedUser) {
-      dispatch(updateUser({ username: data.username, authenticated: true }))
+      dispatch(updateUser({ username: data.username, signedIn: true }))
       navigate("/menu")
     } else {
       alert("wrong username or password")

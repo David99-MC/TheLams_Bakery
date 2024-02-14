@@ -13,7 +13,7 @@ function CreateUser() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!username) return
-    dispatch(updateUser({ username, authenticated: false }))
+    dispatch(updateUser({ username, signedIn: false }))
     navigate("/menu")
   }
 

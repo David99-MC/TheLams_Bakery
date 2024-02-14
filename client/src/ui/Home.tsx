@@ -3,7 +3,7 @@ import { useAppSelector } from "../utils/reduxHooks"
 import Button from "./Button"
 
 function Home() {
-  const username = useAppSelector((state) => state.user.fullName)
+  const username = useAppSelector((state) => state.user.username)
   return (
     <div className="mt-16 text-center">
       <h1 className=" mb-8 text-xl font-semibold text-yellow-500 md:text-3xl">
