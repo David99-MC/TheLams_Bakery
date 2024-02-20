@@ -3,14 +3,19 @@ import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import asyncHandler from "express-async-handler";
+import { notFound, errorHandler } from "../middleware/errorMiddleware";
+import cookieParser from "cookie-parser";
+
 import { config } from "dotenv";
+config();
+
 import Cake from "./models/cake";
 import Order from "./models/order";
 import User from "./models/user";
-import { compareSync, genSaltSync, hashSync } from "bcrypt-ts";
-config();
+import generateToken from "../utils/generateToken";
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
 mongoose
   .connect(DB_URL!)
@@ -30,6 +35,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   cors({
     origin: "*",
@@ -41,68 +47,68 @@ app.get("/", (req: Request, res: Response) => {
   res.send("hello from express with nodemon setup");
 });
 
-app.get("/menu", async (req: Request, res: Response, next) => {
-  try {
+app.get(
+  "/api/menu",
+  asyncHandler(async (req: Request, res: Response) => {
     const menu = await Cake.find();
-    res.json(menu);
-  } catch (err) {
-    next(err);
-  }
-});
+    res.status(200).json(menu);
+  })
+);
 
-app.get("/order/:id", async (req: Request, res: Response, next) => {
-  const { id } = req.params;
-  try {
+app.get(
+  "/api/order/:id",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
     const order = await Order.findById(id);
-    res.json(order);
-  } catch (err) {
-    next(err);
-  }
-});
+    res.status(200).json(order);
+  })
+);
 
-app.post("/order", async (req: Request, res: Response, next) => {
-  try {
+app.post(
+  "/api/order",
+  asyncHandler(async (req: Request, res: Response) => {
     const order = new Order(req.body);
     await order.save();
-    res.json(order);
-  } catch (error) {
-    next(error);
-  }
-});
+    res.status(200).json(order);
+  })
+);
 
-app.post("/register", async (req: Request, res: Response, next) => {
-  try {
+app.post(
+  "/api/register",
+  asyncHandler(async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const isUserExisted = await User.findOne({ username });
     if (isUserExisted) {
+      res.status(400);
       throw new Error("username already exists");
     }
-    const salt: string = genSaltSync(10);
-    const hash: string = hashSync(password, salt);
-    const user = new User({ username, hash });
-    await user.save();
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
+    const user = await User.create({ username, password });
+    generateToken(res, { userId: user._id, username: user.username });
+    res.status(201).json(user);
+  })
+);
 
-app.get("/login", async (req: Request, res: Response, next) => {
-  try {
+app.post(
+  "/api/login",
+  asyncHandler(async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    if (!user) {
+    if (user && user.checkPassword(password)) {
+      generateToken(res, { userId: user._id, username: user.username });
+      res.status(200).json(user);
+    } else {
+      res.status(401);
       throw new Error("Wrong username or password");
     }
-    if (!compareSync(password, user.hash)) {
-      throw new Error("Wrong username or password");
-    }
-    // send back a signed JWT
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
+  })
+);
+
+app.get("/api/logout", (req: Request, res: Response) => {
+  res.clearCookie("jwt").json({ message: "user logged out" });
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`APP IS LISTENNING ${PORT}`);

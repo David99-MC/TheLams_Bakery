@@ -11,7 +11,7 @@ function Home() {
         <br />
         Straight out of the oven, straight to you.
       </h1>
-      {username === "" ? (
+      {!username ? (
         <CreateUser />
       ) : (
         <Button to="/menu" type="primary">

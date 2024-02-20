@@ -29,7 +29,7 @@ function App() {
             <Route path="/order/new" element={<CreateOrder />} />
             <Route path="/order/:orderId" element={<Order />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Register />} />
+            <Route path="/signup" element={<Reg ister />} />
             <Route
               path="/staff"
               element={

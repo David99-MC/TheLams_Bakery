@@ -1,33 +1,33 @@
 import { useForm } from "react-hook-form"
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
-import { login } from "../../services/api_server"
+import { authService, type userInfo } from "../../services/api_server"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch } from "../../utils/reduxHooks"
 import { updateUser } from "./userSlice"
 import { useState } from "react"
 
-type LoginData = {
-  username: string
-  password: string
-}
-
 function Login() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { register, handleSubmit } = useForm<LoginData>()
+  const { register, handleSubmit } = useForm<userInfo>()
   const [isLoading, setIsLoading] = useState(false)
-  async function onFormSubmit(data: LoginData) {
+
+  // login user with dispatch function
+  async function onFormSubmit(data: userInfo) {
     setIsLoading(true)
-    const authenticatedUser = await login(data)
-    if (authenticatedUser) {
-      dispatch(updateUser({ username: data.username, signedIn: true }))
+    const authenticatedUser = await authService.login(data ?? {})
+    if (authenticatedUser.username) {
+      dispatch(
+        updateUser({ username: authenticatedUser.username, signedIn: true })
+      )
       navigate("/menu")
     } else {
       alert("wrong username or password")
     }
     setIsLoading(false)
   }
+
   return (
     <div className="mt-32 flex flex-col items-center justify-center gap-2 rounded-md bg-white px-0 py-10">
       <p className="text-lg font-bold tracking-widest">The Lam's Bakery</p>

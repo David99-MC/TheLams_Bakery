@@ -1,25 +1,34 @@
 import { useForm } from "react-hook-form"
 import Button from "../../ui/Button"
-import { useMutation } from "@tanstack/react-query"
-import { signUp } from "../../services/api_server"
 import { useNavigate } from "react-router-dom"
+import { register as registerUser, reset } from "./userSlice"
+import type { userInfo } from "../../services/api_server"
+import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
+import { useEffect } from "react"
 
-type SignupData = {
-  username: string
-  password: string
-}
 function Register() {
   const navigate = useNavigate()
-  const { mutate, isLoading } = useMutation({
-    mutationFn: signUp,
-    onSuccess: () => {
-      navigate("/login")
-    },
-  })
-  const { register, handleSubmit } = useForm<SignupData>()
-  function onFormSubmit(data: SignupData) {
-    mutate(data)
+  const dispatch = useAppDispatch()
+  const { isFetching, errorMessage, username } = useAppSelector(
+    (state) => state.user
+  )
+
+  useEffect(() => {
+    if (errorMessage) {
+      // TODO: display error message in a toast
+      alert(errorMessage)
+    }
+    if (username) {
+      navigate("/home")
+    }
+    dispatch(reset())
+  }, [errorMessage, username, navigate, dispatch])
+
+  const { register, handleSubmit } = useForm<userInfo>()
+  function onFormSubmit(data: userInfo) {
+    dispatch(registerUser(data))
   }
+
   return (
     <div className="mt-32 flex flex-col items-center justify-center gap-2 rounded-md bg-white px-0 py-10">
       <p className="text-lg font-bold tracking-widest">The Lam's Bakery</p>
@@ -41,8 +50,8 @@ function Register() {
           className="input"
           {...register("password", { required: true })}
         />
-        <Button disabled={isLoading} type="primary">
-          {isLoading ? "Signing you up..." : "Sign up"}
+        <Button disabled={isFetching} type="primary">
+          {isFetching ? "Signing you up..." : "Sign up"}
         </Button>
       </form>
     </div>
