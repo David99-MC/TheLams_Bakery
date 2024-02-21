@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { Toaster } from "react-hot-toast"
 
 import Home from "./ui/Home"
 import Menu from "./features/menu/Menu"
@@ -12,7 +13,6 @@ import ErrorNode from "./ui/ErrorNode"
 import Login from "./features/user/Login"
 import Register from "./features/user/Register"
 import ProtectedRoutes from "./features/protectedRoutes/ProtectedRoutes"
-import { Toaster } from "react-hot-toast"
 import UpdateMenu from "./features/admin/UpdateMenu"
 
 const queryClient: QueryClient = new QueryClient()
