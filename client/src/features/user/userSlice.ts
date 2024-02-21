@@ -1,54 +1,55 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  type PayloadAction,
-} from "@reduxjs/toolkit"
-import { authService, type userInfo } from "../../services/api_server"
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
+import { apiSlice } from "../../services/api_slice"
+
+export type authData = { username: string; password: string }
+export type userError = {
+  status: number
+  data: {
+    message: string
+    stack: string
+  }
+}
+
+export const userApiSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    register: builder.mutation({
+      query: (data: authData) => ({
+        url: "/api/register",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    login: builder.mutation({
+      query: (data: authData) => ({
+        url: "/api/login",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: "/api/logout",
+        method: "GET",
+      }),
+    }),
+  }),
+})
 
 type UserState = {
-  username: string
+  fullName: string
   signedIn: boolean
-  isAdmin?: boolean
-  isFetching?: boolean
-  errorMessage?: string
+  isAdmin: boolean
 }
 
 // get user info from local storage
-const user = JSON.parse(localStorage.getItem("user") || "{}")
-
-// Register functionality
-export const register = createAsyncThunk(
-  "user/register",
-  async (user: userInfo, thunkAPI) => {
-    try {
-      return await authService.registerUser(user)
-    } catch (error) {
-      // Return the error message as action.payload in extra reducers
-      return thunkAPI.rejectWithValue((error as Error).message)
-    }
-  }
-)
-
-// Login functionality
-// export const login = createAsyncThunk(
-//   "user/login",
-//   async (user: userInfo, thunkAPI) => {
-//     try {
-//       // TODO: retrieve user info from server and store it in local storage,
-//       // including Cart state
-//       return await authService.login(user)
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue((error as Error).message)
-//     }
-//   }
-// )
+const userInfo: UserState = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo") || "{}")
+  : null
 
 const initialState: UserState = {
-  username: user ? user.username : "",
-  signedIn: false,
-  isAdmin: false,
-  isFetching: false,
-  errorMessage: "",
+  fullName: userInfo ? userInfo.fullName : "",
+  signedIn: userInfo ? userInfo.signedIn : false,
+  isAdmin: userInfo ? userInfo.isAdmin : false,
 }
 
 const userSlice = createSlice({
@@ -56,42 +57,25 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     // used for guest checkout
-    updateUser: (state: UserState, action: PayloadAction<UserState>) => {
-      state.username = action.payload.username
+    setCredentials: (state: UserState, action: PayloadAction<UserState>) => {
+      state.fullName = action.payload.fullName
       state.signedIn = action.payload.signedIn
-      state.isAdmin = action.payload.isAdmin
+      state.isAdmin = action.payload.isAdmin || false
+      localStorage.setItem("userInfo", JSON.stringify(action.payload))
     },
-    clearUser: (state: UserState) => {
-      state.username = ""
+    clearCredentials: (state: UserState) => {
+      state.fullName = ""
       state.signedIn = false
       state.isAdmin = false
-      state.isFetching = false
-      state.errorMessage = ""
+      localStorage.removeItem("userInfo")
     },
-    reset: (state: UserState) => {
-      state.isFetching = false
-      state.errorMessage = ""
-    },
-  },
-  extraReducers(builder) {
-    builder
-      .addCase(register.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload)
-        state.isFetching = false
-        state.username = action.payload.username
-        state.signedIn = true
-      })
-      .addCase(register.rejected, (state, action) => {
-        state.isFetching = false
-        state.errorMessage = action.payload as string
-      })
-      .addCase(register.pending, (state) => {
-        state.isFetching = true
-      })
   },
 })
 
 // action creators to be used by other components
-export const { updateUser, clearUser, reset } = userSlice.actions
+export const { setCredentials, clearCredentials } = userSlice.actions
+
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
+  userApiSlice
 
 export default userSlice.reducer

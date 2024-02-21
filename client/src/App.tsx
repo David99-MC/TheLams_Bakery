@@ -12,6 +12,8 @@ import ErrorNode from "./ui/ErrorNode"
 import Login from "./features/user/Login"
 import Register from "./features/user/Register"
 import ProtectedRoutes from "./features/protectedRoutes/ProtectedRoutes"
+import { Toaster } from "react-hot-toast"
+import UpdateMenu from "./features/admin/UpdateMenu"
 
 const queryClient: QueryClient = new QueryClient()
 
@@ -24,23 +26,15 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Navigate replace to="home" />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Register />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/order/new" element={<CreateOrder />} />
             <Route path="/order/:orderId" element={<Order />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Reg ister />} />
-            <Route
-              path="/staff"
-              element={
-                <ProtectedRoutes>
-                  {/* TODO: Staff layout */}
-                  <div>staff routes</div>
-                </ProtectedRoutes>
-              }
-            >
-              <Route index element={<Navigate replace to="login" />} />
-              {/* /staff/{ComponentName} */}
+            {/* Protected Routes */}
+            <Route path="" element={<ProtectedRoutes />}>
+              <Route path="/updateMenu" element={<UpdateMenu />} />
             </Route>
             <Route
               path="*"
@@ -51,6 +45,12 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{ margin: "8px" }}
+      />
     </QueryClientProvider>
   )
 }

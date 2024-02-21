@@ -2,12 +2,16 @@ import { Schema, model, type Model } from "mongoose";
 import { compareSync, genSaltSync, hashSync } from "bcrypt-ts";
 
 type UserType = {
+  fullName: string;
+  isAdmin: boolean;
   username: string;
   password: string;
   checkPassword: (rawPassword: string) => boolean;
 };
 
 const UserSchema = new Schema<UserType>({
+  fullName: { type: String, required: true },
+  isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });

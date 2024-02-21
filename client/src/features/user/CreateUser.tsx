@@ -2,7 +2,7 @@ import { useState } from "react"
 import Button from "../../ui/Button"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch } from "../../utils/reduxHooks"
-import { updateUser } from "./userSlice"
+import { setCredentials } from "./userSlice"
 
 function CreateUser() {
   const [username, setUsername] = useState("")
@@ -13,7 +13,7 @@ function CreateUser() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!username) return
-    dispatch(updateUser({ username, signedIn: false }))
+    dispatch(setCredentials({ username, signedIn: false }))
     navigate("/menu")
   }
 

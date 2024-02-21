@@ -1,31 +1,49 @@
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
+import {
+  setCredentials,
+  useLoginMutation,
+  type authData,
+  type userError,
+} from "./userSlice"
+import { useEffect } from "react"
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
-import { authService, type userInfo } from "../../services/api_server"
-import { useNavigate } from "react-router-dom"
-import { useAppDispatch } from "../../utils/reduxHooks"
-import { updateUser } from "./userSlice"
-import { useState } from "react"
+import toast from "react-hot-toast"
 
 function Login() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { register, handleSubmit } = useForm<userInfo>()
-  const [isLoading, setIsLoading] = useState(false)
+  const { register, handleSubmit } = useForm<authData>()
+
+  const { fullName } = useAppSelector((state) => state.user)
+
+  // automatically redirect to menu if user is already logged in
+  useEffect(() => {
+    if (fullName) {
+      navigate("/menu")
+    }
+  }, [fullName, navigate])
+
+  const [login, { isLoading }] = useLoginMutation()
 
   // login user with dispatch function
-  async function onFormSubmit(data: userInfo) {
-    setIsLoading(true)
-    const authenticatedUser = await authService.login(data ?? {})
-    if (authenticatedUser.username) {
+  async function onFormSubmit(data: authData) {
+    try {
+      const authenticatedUser = await login(data).unwrap()
       dispatch(
-        updateUser({ username: authenticatedUser.username, signedIn: true })
+        setCredentials({
+          fullName: authenticatedUser.fullName,
+          signedIn: true,
+          isAdmin: authenticatedUser.isAdmin,
+        })
       )
       navigate("/menu")
-    } else {
-      alert("wrong username or password")
+    } catch (err) {
+      const errorMessage = (err as userError).data?.message
+      toast.error(errorMessage || "Something went wrong")
     }
-    setIsLoading(false)
   }
 
   return (

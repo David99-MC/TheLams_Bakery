@@ -76,13 +76,13 @@ app.post(
 app.post(
   "/api/register",
   asyncHandler(async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { fullName, username, password } = req.body;
     const isUserExisted = await User.findOne({ username });
     if (isUserExisted) {
       res.status(400);
       throw new Error("username already exists");
     }
-    const user = await User.create({ username, password });
+    const user = await User.create({ fullName, username, password });
     generateToken(res, { userId: user._id, username: user.username });
     res.status(201).json(user);
   })
@@ -91,7 +91,8 @@ app.post(
 app.post(
   "/api/login",
   asyncHandler(async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { username, password }: { username: string; password: string } =
+      req.body;
     const user = await User.findOne({ username });
     if (user && user.checkPassword(password)) {
       generateToken(res, { userId: user._id, username: user.username });
@@ -104,7 +105,7 @@ app.post(
 );
 
 app.get("/api/logout", (req: Request, res: Response) => {
-  res.clearCookie("jwt").json({ message: "user logged out" });
+  res.clearCookie("jwt").json({ message: "Successfully logged out" });
 });
 
 app.use(notFound);

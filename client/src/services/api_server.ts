@@ -33,42 +33,37 @@ export async function createNewOrder(order: Order) {
   return data
 }
 
-export type userInfo = {
-  username: string
-  password: string
-}
+// async function registerUser(data: userInfo) {
+//   const res = await fetch(BASE_URL + "api/register", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(data),
+//   })
+//   if (!res.ok) {
+//     throw new Error("username already exists")
+//   }
+//   const user = await res.json()
+//   return user
+// }
 
-async function registerUser(data: userInfo) {
-  const res = await fetch(BASE_URL + "api/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-  if (!res.ok) {
-    throw new Error("username already exists")
-  }
-  const user = await res.json()
-  return user
-}
+// async function login(userData: userInfo) {
+//   const requestedUser = await fetch(BASE_URL + `api/login`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(userData),
+//   })
+//   if (!requestedUser.ok) {
+//     return {}
+//   }
 
-async function login(userData: userInfo) {
-  const requestedUser = await fetch(BASE_URL + `api/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
-  })
-  if (!requestedUser.ok) {
-    return {}
-  }
+//   return requestedUser.json()
+// }
 
-  return requestedUser.json()
-}
-
-export const authService = {
-  registerUser,
-  login,
-}
+// export const authService = {
+//   registerUser,
+//   login,
+// }

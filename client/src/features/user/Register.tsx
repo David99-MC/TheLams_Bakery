@@ -1,32 +1,51 @@
 import { useForm } from "react-hook-form"
 import Button from "../../ui/Button"
 import { useNavigate } from "react-router-dom"
-import { register as registerUser, reset } from "./userSlice"
-import type { userInfo } from "../../services/api_server"
 import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
 import { useEffect } from "react"
+import {
+  setCredentials,
+  useRegisterMutation,
+  type userError,
+} from "./userSlice"
+import toast from "react-hot-toast"
+import LinkButton from "../../ui/LinkButton"
+
+export type userInfo = {
+  fullName: string
+  username: string
+  password: string
+}
 
 function Register() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { isFetching, errorMessage, username } = useAppSelector(
-    (state) => state.user
-  )
+  const [registerUser, { isLoading }] = useRegisterMutation()
+  const { fullName } = useAppSelector((state) => state.user)
 
   useEffect(() => {
-    if (errorMessage) {
-      // TODO: display error message in a toast
-      alert(errorMessage)
+    if (fullName) {
+      navigate("/menu")
     }
-    if (username) {
-      navigate("/home")
-    }
-    dispatch(reset())
-  }, [errorMessage, username, navigate, dispatch])
+  }, [fullName, navigate])
 
   const { register, handleSubmit } = useForm<userInfo>()
-  function onFormSubmit(data: userInfo) {
-    dispatch(registerUser(data))
+  async function onFormSubmit(data: userInfo) {
+    try {
+      const createdUser = await registerUser(data).unwrap()
+      dispatch(
+        setCredentials({
+          fullName: createdUser.fullName,
+          signedIn: true,
+          isAdmin: false,
+        })
+      )
+      navigate("/menu")
+      toast.success(`Welcome, ${createdUser.fullName}!`)
+    } catch (err) {
+      const errorMessage = (err as userError).data?.message
+      toast.error(errorMessage || "Something went wrong")
+    }
   }
 
   return (
@@ -36,6 +55,13 @@ function Register() {
         onSubmit={handleSubmit(onFormSubmit)}
         className="flex w-6/12 flex-col gap-2"
       >
+        <input
+          id="fullName"
+          placeholder="Full Name"
+          type="text"
+          className="input w-full"
+          {...register("fullName", { required: true })}
+        />
         <input
           id="username"
           placeholder="username"
@@ -47,12 +73,15 @@ function Register() {
           id="password"
           placeholder="password"
           type="password"
-          className="input"
+          className="input w-full"
           {...register("password", { required: true })}
         />
-        <Button disabled={isFetching} type="primary">
-          {isFetching ? "Signing you up..." : "Sign up"}
+        <Button disabled={isLoading} type="primary">
+          {isLoading ? "Signing you up..." : "Sign up"}
         </Button>
+        <div className="mt-2 self-center">
+          <LinkButton to="/login">Login instead?</LinkButton>
+        </div>
       </form>
     </div>
   )

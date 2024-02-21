@@ -1,21 +1,17 @@
-import { useNavigate } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import { useAppSelector } from "../../utils/reduxHooks"
-import { useEffect } from "react"
+import ErrorNode from "../../ui/ErrorNode"
 
-function ProtectedRoutes({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate()
-  const signedIn = useAppSelector((state) => state.user.signedIn)
-  const isAdmin = useAppSelector((state) => state.user.isAdmin)
+function ProtectedRoutes() {
+  const { signedIn, isAdmin } = useAppSelector((state) => state.user)
 
-  const authenticated = signedIn && isAdmin
+  const authorized = signedIn && isAdmin
 
-  useEffect(() => {
-    if (!authenticated) {
-      navigate("/login")
-    }
-  }, [authenticated, navigate])
-
-  return children
+  return authorized ? (
+    <Outlet />
+  ) : (
+    <ErrorNode message="You are not authorized to access this page" />
+  )
 }
 
 export default ProtectedRoutes

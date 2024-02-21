@@ -1,10 +1,10 @@
 import { useAppSelector } from "../../utils/reduxHooks"
 
 function Username() {
-  const username = useAppSelector((state) => state.user.username)
+  const { fullName } = useAppSelector((state) => state.user)
   return (
     <div className="hidden font-medium md:block">
-      {username ? `Welcome, ${username}!` : ""}
+      {fullName ? `Welcome, ${fullName}!` : ""}
     </div>
   )
 }

@@ -1,20 +1,24 @@
 import { Link, useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../utils/reduxHooks"
+import { clearCredentials, useLogoutMutation } from "../features/user/userSlice"
 import Username from "../features/user/Username"
 import SearchOrder from "../features/order/SearchOrder"
-import { useAppDispatch, useAppSelector } from "../utils/reduxHooks"
 import Button from "./Button"
-import { clearUser } from "../features/user/userSlice"
+import toast from "react-hot-toast"
 
 function Header() {
-  const username = useAppSelector((state) => state.user.username)
-  const signedIn = useAppSelector((state) => state.user.signedIn)
+  const { fullName, signedIn } = useAppSelector((state) => state.user)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
-  function handleSignOut() {
-    dispatch(clearUser())
+  const [logout] = useLogoutMutation()
+
+  async function handleSignOut() {
+    const signOutMessage = await logout({}).unwrap()
+    dispatch(clearCredentials())
     navigate("/home")
+    toast.success(signOutMessage.message)
   }
   return (
     <header className="flex items-center justify-between bg-yellow-500 px-3 py-4">
@@ -25,8 +29,8 @@ function Header() {
       <SearchOrder />
 
       <div className="flex items-center gap-3">
-        {username && <Username />}
-        {username && signedIn ? (
+        {fullName && <Username />}
+        {fullName && signedIn ? (
           <Button onClick={handleSignOut} type="small">
             Sign out
           </Button>
