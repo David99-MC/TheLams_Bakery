@@ -3,7 +3,7 @@ import { useAppSelector } from "../utils/reduxHooks"
 import Button from "./Button"
 
 function Home() {
-  const username = useAppSelector((state) => state.user.username)
+  const { fullName } = useAppSelector((state) => state.user)
   return (
     <div className="mt-16 text-center">
       <h1 className=" mb-8 text-xl font-semibold text-yellow-500 md:text-3xl">
@@ -11,7 +11,7 @@ function Home() {
         <br />
         Straight out of the oven, straight to you.
       </h1>
-      {!username ? (
+      {!fullName ? (
         <CreateUser />
       ) : (
         <Button to="/menu" type="primary">

@@ -1,7 +1,8 @@
-import { Schema, model, type Model } from "mongoose";
+import { Schema, model, Types, Model } from "mongoose";
 import { compareSync, genSaltSync, hashSync } from "bcrypt-ts";
 
 type UserType = {
+  session: Types.ObjectId;
   fullName: string;
   isAdmin: boolean;
   username: string;
@@ -10,6 +11,7 @@ type UserType = {
 };
 
 const UserSchema = new Schema<UserType>({
+  session: { type: Schema.ObjectId, ref: "session" },
   fullName: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true },

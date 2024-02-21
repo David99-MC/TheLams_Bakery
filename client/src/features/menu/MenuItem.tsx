@@ -13,6 +13,15 @@ function MenuItem(item: Cake) {
     unitPrice,
   }
   const dispatch = useAppDispatch()
+  // const {mutate} = useMutation({
+  //  mutationKey: "userSession",
+  //   mutationFn:
+  // })
+
+  function onAddToCart() {
+    dispatch(addItem(cartItem))
+    // mutate(cartItem)
+  }
 
   return (
     <li className={`flex gap-4 py-2 ${soldOut ? "opacity-70 grayscale" : ""}`}>
@@ -30,11 +39,7 @@ function MenuItem(item: Cake) {
               Sold out
             </p>
           )}
-          <Button
-            disabled={soldOut}
-            onClick={() => dispatch(addItem(cartItem))}
-            type="small"
-          >
+          <Button disabled={soldOut} onClick={onAddToCart} type="small">
             Add to cart
           </Button>
         </div>

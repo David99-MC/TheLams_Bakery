@@ -14,6 +14,8 @@ import Cake from "./models/cake";
 import Order from "./models/order";
 import User from "./models/user";
 import generateToken from "../utils/generateToken";
+import type { cartItemType } from "./models/session";
+import Session from "./models/session";
 
 const PORT = process.env.PORT || 5000;
 const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
@@ -82,7 +84,16 @@ app.post(
       res.status(400);
       throw new Error("username already exists");
     }
-    const user = await User.create({ fullName, username, password });
+    const newSession = await Session.create({
+      cart: [],
+      expiredAt: new Date(Date.now()),
+    });
+    const user = await User.create({
+      fullName,
+      username,
+      password,
+      session: newSession._id,
+    });
     generateToken(res, { userId: user._id, username: user.username });
     res.status(201).json(user);
   })
@@ -107,6 +118,20 @@ app.post(
 app.get("/api/logout", (req: Request, res: Response) => {
   res.clearCookie("jwt").json({ message: "Successfully logged out" });
 });
+
+app.get(
+  "/api/session/:sessionId",
+  asyncHandler(async (req: Request, res: Response) => {
+    const { sessionId } = req.params;
+    const session = await Session.findById(sessionId);
+    if (!session) {
+      res.status(404);
+      throw new Error("Session not found");
+    } else {
+      res.status(200).json(session);
+    }
+  })
+);
 
 app.use(notFound);
 app.use(errorHandler);
