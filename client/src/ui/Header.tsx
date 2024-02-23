@@ -1,13 +1,19 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../utils/reduxHooks"
-import { clearCredentials, useLogoutMutation } from "../features/user/userSlice"
+import {
+  clearCredentials,
+  selectCurrentUser,
+  selectCurrentToken,
+} from "../features/user/userSlice"
 import Username from "../features/user/Username"
 import SearchOrder from "../features/order/SearchOrder"
 import Button from "./Button"
 import toast from "react-hot-toast"
+import { useLogoutMutation } from "../features/user/userApiSlice"
 
 function Header() {
-  const { fullName, signedIn } = useAppSelector((state) => state.user)
+  const { fullName, signedIn } = useAppSelector(selectCurrentUser) ?? {}
+  const token = useAppSelector(selectCurrentToken)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()

@@ -1,16 +1,15 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation, Navigate } from "react-router-dom"
 import { useAppSelector } from "../../utils/reduxHooks"
-import ErrorNode from "../../ui/ErrorNode"
+import { selectCurrentToken } from "../user/userSlice"
 
 function ProtectedRoutes() {
-  const { signedIn, isAdmin } = useAppSelector((state) => state.user)
+  const token = useAppSelector(selectCurrentToken)
+  const location = useLocation()
 
-  const authorized = signedIn && isAdmin
-
-  return authorized ? (
+  return token ? (
     <Outlet />
   ) : (
-    <ErrorNode message="You are not authorized to access this page" />
+    <Navigate to="/login" state={{ from: location }} replace />
   )
 }
 

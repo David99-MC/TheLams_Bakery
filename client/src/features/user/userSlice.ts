@@ -9,7 +9,7 @@ export type userError = {
 }
 
 export type UserState = {
-  user: { fullName: string; signedIn: boolean; isAdmin: boolean } | null
+  user: { fullName: string; isAdmin: boolean } | null
   token: string | null
 }
 
@@ -39,4 +39,5 @@ export const { setCredentials, clearCredentials } = userSlice.actions
 export default userSlice.reducer
 
 export const selectCurrentUser = (state: { user: UserState }) => state.user.user
-export const selectToken = (state: { user: UserState }) => state.user.token
+export const selectCurrentToken = (state: { user: UserState }) =>
+  state.user.token

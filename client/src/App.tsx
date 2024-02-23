@@ -24,18 +24,22 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<AppLayout />}>
+            {/* Public Routes */}
             <Route index element={<Navigate replace to="home" />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/order/new" element={<CreateOrder />} />
-            <Route path="/order/:orderId" element={<Order />} />
+
             {/* Protected Routes */}
-            <Route path="" element={<ProtectedRoutes />}>
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/order/new" element={<CreateOrder />} />
+              <Route path="/order/:orderId" element={<Order />} />
               <Route path="/updateMenu" element={<UpdateMenu />} />
             </Route>
+
+            {/* 404 */}
             <Route
               path="*"
               element={

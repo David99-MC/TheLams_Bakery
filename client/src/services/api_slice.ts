@@ -27,16 +27,20 @@ const baseQuery = fetchBaseQuery({
   },
 })
 
-// Handle 401 errors by sending a refresh the token
+// Handle 403 errors by sending a refresh the token
 const baseQueryWithReauth = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
   extraOptions: object
 ) => {
   let result = await baseQuery(args, api, extraOptions)
-  if (result.error?.status === 401) {
+  if (result.error?.status === 403) {
     console.log("sending refresh token...")
-    const refreshResult = await baseQuery("/api/refresh", api, extraOptions)
+    const refreshResult = await baseQuery(
+      "/api/refreshToken",
+      api,
+      extraOptions
+    )
     if (refreshResult?.data) {
       // IMPORTANT: Double check this with the backend
       console.log("refresh token success")

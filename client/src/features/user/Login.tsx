@@ -1,23 +1,19 @@
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
-import {
-  setCredentials,
-  useLoginMutation,
-  type authData,
-  type userError,
-} from "./userSlice"
+import { selectCurrentUser, setCredentials, type userError } from "./userSlice"
 import { useEffect } from "react"
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
 import toast from "react-hot-toast"
+import { useLoginMutation, type authData } from "./userApiSlice"
 
 function Login() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { register, handleSubmit } = useForm<authData>()
 
-  const { fullName } = useAppSelector((state) => state.user)
+  const { fullName } = useAppSelector(selectCurrentUser) ?? {}
 
   // automatically redirect to menu if user is already logged in
   useEffect(() => {
@@ -34,9 +30,7 @@ function Login() {
       const authenticatedUser = await login(data).unwrap()
       dispatch(
         setCredentials({
-          fullName: authenticatedUser.fullName,
-          signedIn: true,
-          isAdmin: authenticatedUser.isAdmin,
+          user: authenticatedUser,
         })
       )
       navigate("/menu")
