@@ -1,19 +1,20 @@
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
-import { selectCurrentUser, setCredentials, type userError } from "./userSlice"
+import { setCredentials, type userError } from "./userSlice"
 import { useEffect } from "react"
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
 import toast from "react-hot-toast"
 import { useLoginMutation, type authData } from "./userApiSlice"
+import { setCart } from "../cart/cartSlice"
 
 function Login() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { register, handleSubmit } = useForm<authData>()
 
-  const { fullName } = useAppSelector(selectCurrentUser) ?? {}
+  const { fullName } = useAppSelector((state) => state.user) ?? {}
 
   // automatically redirect to menu if user is already logged in
   useEffect(() => {
@@ -27,12 +28,17 @@ function Login() {
   // login user with dispatch function
   async function onFormSubmit(data: authData) {
     try {
-      const authenticatedUser = await login(data).unwrap()
+      const { user, accessToken, cart } = await login(data).unwrap()
+      console.log("user:", user)
       dispatch(
         setCredentials({
-          user: authenticatedUser,
+          fullName: user.fullName,
+          isAdmin: user.isAdmin,
+          accessToken,
         })
       )
+      dispatch(setCart(cart))
+
       navigate("/menu")
     } catch (err) {
       const errorMessage = (err as userError).data?.message

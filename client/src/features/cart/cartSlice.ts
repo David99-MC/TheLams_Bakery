@@ -99,7 +99,7 @@ const cartSlice = createSlice({
 })
 
 // action creators to be used by other components
-export const { addItem, deleteItem, incItem, decItem, clearCart } =
+export const { setCart, addItem, deleteItem, incItem, decItem, clearCart } =
   cartSlice.actions
 
 export const {

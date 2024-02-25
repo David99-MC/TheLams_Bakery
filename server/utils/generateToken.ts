@@ -1,24 +1,22 @@
 import type { Response } from "express";
 import jwt from "jsonwebtoken";
-import Mongoose from "mongoose";
 
 import { config } from "dotenv";
-import type { cartItemType } from "../src/models/user";
 config();
 
 type UserInfo = {
   fullName: string;
   isAdmin: boolean;
-  cart: cartItemType[];
 };
 
 // Generate an access token and a refresh token set it as a cookie
+// Re-login is required when refresh token is expired
 const generateTokens = (res: Response, userInfo: UserInfo) => {
   const accessToken = jwt.sign(
     userInfo,
     process.env.ACCESS_TOKEN_SECRET as string,
     {
-      expiresIn: "1h",
+      expiresIn: "15m",
     }
   );
   const refreshToken = jwt.sign(

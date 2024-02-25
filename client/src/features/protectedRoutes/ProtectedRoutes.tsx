@@ -1,9 +1,9 @@
 import { Outlet, useLocation, Navigate } from "react-router-dom"
 import { useAppSelector } from "../../utils/reduxHooks"
-import { selectCurrentToken } from "../user/userSlice"
+import { getCurrentAccessToken } from "../user/userSlice"
 
 function ProtectedRoutes() {
-  const token = useAppSelector(selectCurrentToken)
+  const token = useAppSelector(getCurrentAccessToken)
   const location = useLocation()
 
   return token ? (

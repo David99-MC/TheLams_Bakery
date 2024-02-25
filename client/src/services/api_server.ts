@@ -1,11 +1,16 @@
 import type { Order } from "../../../server/src/models/order"
 import type { Cake } from "../../../server/src/models/cake"
-// import jwt from "jsonwebtoken"
+import store from "../utils/store"
 
 const BASE_URL = "http://localhost:5000/"
 
 export async function getMenu() {
-  const res = await fetch(BASE_URL + "api/menu")
+  const accessToken = store.getState().user.accessToken
+  const res = await fetch(BASE_URL + "api/menu", {
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+    },
+  })
   //the caller will catch this error
   if (!res.ok) throw new Error("Failed to fetch the menu")
   const data = await res.json()
@@ -32,38 +37,3 @@ export async function createNewOrder(order: Order) {
   const data = await res.json()
   return data
 }
-
-// async function registerUser(data: userInfo) {
-//   const res = await fetch(BASE_URL + "api/register", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   })
-//   if (!res.ok) {
-//     throw new Error("username already exists")
-//   }
-//   const user = await res.json()
-//   return user
-// }
-
-// async function login(userData: userInfo) {
-//   const requestedUser = await fetch(BASE_URL + `api/login`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(userData),
-//   })
-//   if (!requestedUser.ok) {
-//     return {}
-//   }
-
-//   return requestedUser.json()
-// }
-
-// export const authService = {
-//   registerUser,
-//   login,
-// }

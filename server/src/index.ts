@@ -16,8 +16,9 @@ import { verifyJWT } from "../middleware/JwtVerifyMiddleware";
 import Cake from "./models/cake";
 import Order from "./models/order";
 import User from "./models/user";
-import { NextFunction } from "express";
-import jwt, { type JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import { corsOptions } from "../config/corsOptions";
+import { verifyOrigins } from "../middleware/originMiddleware";
 
 const PORT = process.env.PORT || 5000;
 const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
@@ -35,16 +36,21 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Handle 'Access-Control-Allow-Origin' and 'Access-Control-Allow-Credentials' header
+app.use(verifyOrigins);
+
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
+
 // For parsing application/json
 app.use(express.json());
+
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// For cookies in the request headers
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+
 app.use(express.static(path.join(__dirname, "images")));
 
 app.get("/", (req: Request, res: Response) => {
@@ -80,11 +86,10 @@ app.get(
           {
             fullName: decoded.fullName,
             isAdmin: decoded.isAdmin,
-            cart: decoded.cart || [],
           },
           process.env.ACCESS_TOKEN_SECRET as string,
           {
-            expiresIn: "1h",
+            expiresIn: "15m",
           }
         );
         res.json(accessToken);
@@ -123,6 +128,9 @@ app.post(
   })
 );
 
+// handling user roles
+// ref: https://www.youtube.com/watch?v=f2EqECiTBL8 ~ 5:09:00
+
 app.post(
   "/api/register",
   asyncHandler(async (req: Request, res: Response) => {
@@ -136,11 +144,14 @@ app.post(
     const [accessToken, refreshToken] = generateTokens(res, {
       fullName: user.fullName,
       isAdmin: user.isAdmin,
-      cart: [],
     });
     user.refreshToken = refreshToken;
     await user.save();
-    res.status(201).json(accessToken);
+    res.status(201).json({
+      user: { fullname: user.fullName, isAdmin: user.isAdmin },
+      accessToken,
+      cart: [],
+    });
   })
 );
 
@@ -154,10 +165,14 @@ app.post(
       const [accessToken, refreshToken] = generateTokens(res, {
         fullName: user.fullName,
         isAdmin: user.isAdmin,
-        cart: user.cart || [],
       });
       user.refreshToken = refreshToken;
-      res.status(200).json(accessToken);
+      await user.save();
+      res.status(200).json({
+        user: { fullName: user.fullName, isAdmin: user.isAdmin },
+        accessToken,
+        cart: user.cart || [],
+      });
     } else {
       res.status(401);
       throw new Error("Wrong username or password");
@@ -187,20 +202,6 @@ app.get(
     }
   })
 );
-
-// app.get(
-//   "/api/session/:sessionId",
-//   asyncHandler(async (req: Request, res: Response) => {
-//     const { sessionId } = req.params;
-//     const session = await Session.findById(sessionId);
-//     if (!session) {
-//       res.status(404);
-//       throw new Error("Session not found");
-//     } else {
-//       res.status(200).json(session);
-//     }
-//   })
-// );
 
 app.use(notFound);
 app.use(errorHandler);

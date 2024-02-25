@@ -3,13 +3,11 @@ import Button from "../../ui/Button"
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
 import { useEffect } from "react"
-import {
-  setCredentials,
-  useRegisterMutation,
-  type userError,
-} from "./userSlice"
+import { setCredentials, type userError } from "./userSlice"
 import toast from "react-hot-toast"
 import LinkButton from "../../ui/LinkButton"
+import { setCart } from "../cart/cartSlice"
+import { useRegisterMutation } from "./userApiSlice"
 
 export type userInfo = {
   fullName: string
@@ -21,7 +19,7 @@ function Register() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [registerUser, { isLoading }] = useRegisterMutation()
-  const { fullName } = useAppSelector((state) => state.user)
+  const { fullName } = useAppSelector((state) => state.user) ?? {}
 
   useEffect(() => {
     if (fullName) {
@@ -32,16 +30,17 @@ function Register() {
   const { register, handleSubmit } = useForm<userInfo>()
   async function onFormSubmit(data: userInfo) {
     try {
-      const createdUser = await registerUser(data).unwrap()
+      const { user, accessToken, cart } = await registerUser(data).unwrap()
       dispatch(
         setCredentials({
-          fullName: createdUser.fullName,
-          signedIn: true,
-          isAdmin: false,
+          fullName: user.fullName,
+          isAdmin: user.isAdmin,
+          accessToken,
         })
       )
+      dispatch(setCart(cart))
       navigate("/menu")
-      toast.success(`Welcome, ${createdUser.fullName}!`)
+      toast.success(`Welcome, ${user.fullName}!`)
     } catch (err) {
       const errorMessage = (err as userError).data?.message
       toast.error(errorMessage || "Something went wrong")

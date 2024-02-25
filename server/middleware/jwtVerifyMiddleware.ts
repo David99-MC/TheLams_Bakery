@@ -12,7 +12,6 @@ declare module "express-serve-static-core" {
     user: {
       fullName: string;
       isAdmin: boolean;
-      cart: cartItemType[];
     };
   }
 }
@@ -20,25 +19,24 @@ declare module "express-serve-static-core" {
 export const verifyJWT = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    // Bearer <token>
+    if (!authHeader?.startsWith("Bearer ")) {
       res.status(401);
       throw new Error("Not authorized");
     }
-    // Bearer <token>
     const accessToken = authHeader.split(" ")[1];
     jwt.verify(
       accessToken,
       process.env.ACCESS_TOKEN_SECRET as Secret,
       (err, decoded) => {
         if (err) {
-          // access token is either temepered or expired
+          // access token is either temepered with or expired
           res.status(403);
           throw new Error("Invalid token");
         }
         req.user = {
           fullName: (decoded as JwtPayload)?.fullName,
           isAdmin: (decoded as JwtPayload)?.isAdmin,
-          cart: (decoded as JwtPayload)?.cart || [],
         };
         next();
       }

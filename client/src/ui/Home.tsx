@@ -1,9 +1,8 @@
-import { selectCurrentUser } from "../features/user/userSlice"
 import { useAppSelector } from "../utils/reduxHooks"
 import Button from "./Button"
 
 function Home() {
-  const { fullName } = useAppSelector(selectCurrentUser) ?? {}
+  const { fullName } = useAppSelector((state) => state.user) ?? {}
   return (
     <div className="mt-16 text-center">
       <h1 className=" mb-8 text-xl font-semibold text-yellow-500 md:text-3xl">

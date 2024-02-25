@@ -6,28 +6,28 @@ import {
   type BaseQueryApi,
   type FetchArgs,
 } from "@reduxjs/toolkit/query/react"
-import {
-  setCredentials,
-  clearCredentials,
-  type UserState,
-} from "../features/user/userSlice"
+import { setCredentials, clearCredentials } from "../features/user/userSlice"
+import type { RootState } from "../utils/store"
 
-const API_URL = process.env.PRODUCTION_API_URL || "http://localhost:5000"
+// TODO: change this to the actual server URL
+const API_URL = "http://localhost:5000"
 
-// Set up the base http query
+// Set up the base http query with the access token in the header
 const baseQuery = fetchBaseQuery({
   baseUrl: API_URL,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as { user: UserState }).user.token
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`)
+    const accessToken = (getState() as RootState).user.accessToken
+    if (accessToken) {
+      headers.set("authorization", `Bearer ${accessToken}`)
     }
     return headers
   },
 })
 
-// Handle 403 errors by sending a refresh the token
+// Handle 403 errors (expired access token) by requesting a new access token,
+// using the user's refresh token in db,
+// then retry the original request with the new access
 const baseQueryWithReauth = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
@@ -42,15 +42,15 @@ const baseQueryWithReauth = async (
       extraOptions
     )
     if (refreshResult?.data) {
-      // IMPORTANT: Double check this with the backend
       console.log("refresh token success")
-      // store the new token in the redux store
-      const { user, token } = (api.getState() as { user: UserState }).user
+      // store the new token in the redux store (memory only)
+      const { fullName, isAdmin } = (api.getState() as RootState).user
+      // refreshResult.data === new access token from the server
       api.dispatch(
         setCredentials({
-          ...refreshResult.data,
-          user,
-          token,
+          fullName,
+          isAdmin,
+          accessToken: refreshResult.data as string,
         })
       )
       // Try the original request again with new access token

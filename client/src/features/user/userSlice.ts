@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
+import type { RootState } from "../../utils/store"
 
 export type userError = {
   status: number
@@ -9,13 +10,15 @@ export type userError = {
 }
 
 export type UserState = {
-  user: { fullName: string; isAdmin: boolean } | null
-  token: string | null
+  fullName: string | null
+  isAdmin: boolean
+  accessToken: string | null
 }
 
 const initialState: UserState = {
-  user: null,
-  token: null,
+  fullName: "",
+  isAdmin: false,
+  accessToken: null,
 }
 
 const userSlice = createSlice({
@@ -23,12 +26,15 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state: UserState, action: PayloadAction<UserState>) => {
-      state.user = action.payload.user
-      state.token = action.payload.token
+      console.log("action.payload:", action.payload)
+      state.fullName = action.payload.fullName
+      state.isAdmin = action.payload.isAdmin
+      state.accessToken = action.payload.accessToken
     },
     clearCredentials: (state: UserState) => {
-      state.user = null
-      state.token = null
+      state.fullName = null
+      state.isAdmin = false
+      state.accessToken = null
     },
   },
 })
@@ -38,6 +44,5 @@ export const { setCredentials, clearCredentials } = userSlice.actions
 
 export default userSlice.reducer
 
-export const selectCurrentUser = (state: { user: UserState }) => state.user.user
-export const selectCurrentToken = (state: { user: UserState }) =>
-  state.user.token
+export const getCurrentAccessToken = (state: RootState) =>
+  state.user.accessToken
