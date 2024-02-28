@@ -62,7 +62,7 @@ app.get("/", (req: Request, res: Response) => {
 app.get(
   "/api/refreshToken",
   asyncHandler(async (req: Request, res: Response) => {
-    const refreshToken = req.cookies["refreshJwt"];
+    const refreshToken = req.cookies.refreshJwt;
     if (!refreshToken) {
       res.status(401);
       throw new Error("Unauthorized, no token found");
@@ -92,11 +92,13 @@ app.get(
             expiresIn: "15m",
           }
         );
-        res.json(accessToken);
+        res.json({
+          user: { fullName: user.fullName, isAdmin: user.isAdmin },
+          accessToken,
+          cart: user.cart || [],
+        });
       }
     );
-
-    res.send("hello from express with nodemon setup");
   })
 );
 
@@ -180,28 +182,34 @@ app.post(
   })
 );
 
-app.get(
-  "/api/logout",
-  asyncHandler(async (req: Request, res: Response) => {
-    const refreshToken = req.cookies["refreshJwt"];
-    if (!refreshToken) {
-      res.status(204).json({ message: "logged out" });
-    }
-    const user = await User.findOne({ refreshToken });
-    // clear the cookie
-    res.clearCookie("refrestJwt", {
+app.get("/api/logout", async (req: Request, res: Response) => {
+  const refreshToken = req.cookies["refreshJwt"];
+  if (!refreshToken) {
+    res.status(200).json({ message: "successfully logged out!" });
+    return;
+  }
+  const user = await User.findOne({ refreshToken });
+  if (user) {
+    // clear the refresh token in the database
+    res.clearCookie("refreshJwt", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
     });
-    if (user) {
-      // clear the refresh token in the database
-      user.refreshToken = "";
-      await user.save();
-      res.status(204).json({ message: "logged out" });
-    }
-  })
-);
+    user.refreshToken = "";
+    await user.save();
+    res.status(200).json({ message: "successfully logged out!" });
+  } else {
+    // console.log("logged out but no user found with the refresh token");
+    // clear the cookie
+    res.clearCookie("refreshJwt", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.status(200).json({ message: "successfully logged out!" });
+  }
+});
 
 app.use(notFound);
 app.use(errorHandler);

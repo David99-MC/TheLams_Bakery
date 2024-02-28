@@ -27,9 +27,9 @@ const generateTokens = (res: Response, userInfo: UserInfo) => {
     }
   );
 
-  res.cookie("refrestJwt", refreshToken, {
+  res.cookie("refreshJwt", refreshToken, {
     httpOnly: true, // makes it not accessible by javascript
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     sameSite: "none",
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });

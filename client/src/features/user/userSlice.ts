@@ -26,7 +26,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state: UserState, action: PayloadAction<UserState>) => {
-      console.log("action.payload:", action.payload)
       state.fullName = action.payload.fullName
       state.isAdmin = action.payload.isAdmin
       state.accessToken = action.payload.accessToken

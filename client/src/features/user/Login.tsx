@@ -29,7 +29,6 @@ function Login() {
   async function onFormSubmit(data: authData) {
     try {
       const { user, accessToken, cart } = await login(data).unwrap()
-      console.log("user:", user)
       dispatch(
         setCredentials({
           fullName: user.fullName,

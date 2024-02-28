@@ -14,6 +14,7 @@ import Login from "./features/user/Login"
 import Register from "./features/user/Register"
 import ProtectedRoutes from "./features/protectedRoutes/ProtectedRoutes"
 import UpdateMenu from "./features/admin/UpdateMenu"
+import PersistLogin from "./features/protectedRoutes/PersistLogin"
 
 const queryClient: QueryClient = new QueryClient()
 
@@ -29,14 +30,17 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Register />} />
+            <Route path="/order/:orderId" element={<Order />} />
 
             {/* Protected Routes */}
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/menu" element={<Menu />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/order/new" element={<CreateOrder />} />
-              <Route path="/order/:orderId" element={<Order />} />
-              <Route path="/updateMenu" element={<UpdateMenu />} />
+            <Route element={<PersistLogin />}>
+              <Route element={<ProtectedRoutes />}>
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/order/new" element={<CreateOrder />} />
+                {/* TODO: Admin Routes */}
+                <Route path="/updateMenu" element={<UpdateMenu />} />
+              </Route>
             </Route>
 
             {/* 404 */}

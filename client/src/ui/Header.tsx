@@ -1,26 +1,21 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useAppDispatch, useAppSelector } from "../utils/reduxHooks"
-import { clearCredentials } from "../features/user/userSlice"
+import { useAppSelector } from "../utils/reduxHooks"
 import Username from "../features/user/Username"
 import SearchOrder from "../features/order/SearchOrder"
 import Button from "./Button"
 import toast from "react-hot-toast"
-import { useLogoutMutation } from "../features/user/userApiSlice"
+import { useLogout } from "../services/customHooks"
 
 function Header() {
   const { fullName } = useAppSelector((state) => state.user) ?? {}
-  console.log("fullName:", fullName)
 
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-
-  const [logout] = useLogoutMutation()
+  const logout = useLogout()
 
   async function handleSignOut() {
-    const signOutMessage = await logout({}).unwrap()
-    dispatch(clearCredentials())
+    const { message } = await logout()
     navigate("/home")
-    toast.success(signOutMessage.message)
+    toast.success(message)
   }
   return (
     <header className="flex items-center justify-between bg-yellow-500 px-3 py-4">
