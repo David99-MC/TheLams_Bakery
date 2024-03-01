@@ -63,7 +63,7 @@ app.get("/", (req: Request, res: Response) => {
 app.get(
   "/api/refreshToken",
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const refreshToken = req.cookies.refreshJwt;
     if (!refreshToken) {
       res.status(401);
@@ -109,7 +109,7 @@ app.get(
   "/api/menu",
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const menu = await Cake.find();
     res.status(200).json(menu);
   })
@@ -119,7 +119,7 @@ app.get(
 app.get(
   "/api/order/:id",
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const { id } = req.params;
     const order = await Order.findById(id);
     res.status(200).json(order);
@@ -131,7 +131,7 @@ app.post(
   "/api/order",
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
     if (user) {
       user.cart = [];
@@ -148,7 +148,7 @@ app.get(
   "/api/cart",
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
     if (!user) {
       res.status(403);
@@ -163,7 +163,7 @@ app.put(
   "/api/cart",
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const { item, action } = req.body;
     const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
     if (!user) {
@@ -203,7 +203,7 @@ app.delete(
   "/api/cart",
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
     if (!user) {
       res.status(403);
@@ -222,7 +222,7 @@ app.delete(
 app.post(
   "/api/register",
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const { fullName, username, password } = req.body;
     const isUserExisted = await User.findOne({ username });
     if (isUserExisted) {
@@ -248,7 +248,7 @@ app.post(
 app.post(
   "/api/login",
   asyncHandler(async (req: Request, res: Response) => {
-    res.setHeader("x-content-type-options", "nosniff");
+    // res.setHeader("x-content-type-options", "nosniff");
     const { username, password }: { username: string; password: string } =
       req.body;
     const user = await User.findOne({ username });
@@ -273,7 +273,7 @@ app.post(
 
 // logout
 app.get("/api/logout", async (req: Request, res: Response) => {
-  res.setHeader("x-content-type-options", "nosniff");
+  // res.setHeader("x-content-type-options", "nosniff");
   const refreshToken = req.cookies["refreshJwt"];
   if (!refreshToken) {
     res.status(200).json({ message: "successfully logged out!" });
