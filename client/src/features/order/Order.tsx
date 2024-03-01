@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom"
 
 import OrderItem from "./OrderItem"
-import { type Order } from "../../../../server/src/models/order"
 import { getOrderById } from "../../services/api_server"
 
 import Loader from "../../ui/Loader"

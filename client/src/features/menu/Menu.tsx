@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import { getMenu } from "../../services/api_server"
 import MenuItem from "./MenuItem"
-import type { Cake } from "../../../../server/src/models/cake"
 import Loader from "../../ui/Loader"
+import type { Cake } from "./MenuTypes"
 
 function Menu() {
   const { isLoading, data: menuItems } = useQuery({

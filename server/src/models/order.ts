@@ -1,5 +1,11 @@
 import { Schema, model, type Model } from "mongoose";
-import type { CartItemType } from "../../../client/src/features/cart/Cart";
+
+type CartItemType = {
+  productID: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+};
 
 export enum OrderStatus {
   // "Unknown" | "Received" | "In Progress" | "In Delivery" | "Delivered"

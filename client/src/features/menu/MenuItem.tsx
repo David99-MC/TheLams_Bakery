@@ -1,7 +1,7 @@
-import type { Cake } from "../../../../server/src/models/cake"
 import { useAddCartItem } from "../../services/cartHooks"
 import Button from "../../ui/Button"
 import type { CartItemType } from "../cart/Cart"
+import type { Cake } from "./MenuTypes"
 
 function MenuItem(item: Cake) {
   const { _id, vietnameseName, unitPrice, ingredients, soldOut, imgUrl } = item
