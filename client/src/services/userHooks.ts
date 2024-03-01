@@ -2,7 +2,7 @@ import { clearCart, setCart } from "../features/cart/cartSlice"
 import { clearCredentials, setCredentials } from "../features/user/userSlice"
 import { useAppDispatch } from "../utils/reduxHooks"
 
-const API_URL = "https://thelamsbakery-api.onrender.com" // "http://localhost:5000/"
+const API_URL = "https://thelamsbakery-api.onrender.com/" // "http://localhost:5000/"
 
 export const useRefreshToken = () => {
   const dispatch = useAppDispatch()
