@@ -24,14 +24,14 @@ type Cake = {
   soldOut: boolean
 }
 
-const API_URL = "https://thelamsbakery-api.onrender.com" // "http://localhost:5000/"
+const API_URL = "https://thelamsbakery-api.onrender.com/" // "http://localhost:5000/"
 
 // credentials: "include" is used to send cookies
 
 async function fetchBaseQuery(path: string, method?: string, body?: object) {
   const accessToken = store.getState().user.accessToken
   let res = null
-  if (path === "/api/refreshToken") {
+  if (path === "api/refreshToken") {
     res = await fetch(API_URL + path, {
       credentials: "include",
       headers: {
@@ -73,7 +73,7 @@ async function fetchBaseQueryWithReauth(
 ) {
   let result = await fetchBaseQuery(path, method, body)
   if (!result.ok && result.status === 403) {
-    const refreshResult = await fetchBaseQuery("/api/refreshToken")
+    const refreshResult = await fetchBaseQuery("api/refreshToken")
     const { accessToken } = await refreshResult.json()
     if (accessToken) {
       console.log("refresh token success")

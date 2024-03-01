@@ -20,6 +20,8 @@ const baseQuery = fetchBaseQuery({
     const accessToken = (getState() as RootState).user.accessToken
     if (accessToken) {
       headers.set("authorization", `Bearer ${accessToken}`)
+      headers.set("Cache-Control", "no-cache")
+      headers.set("X-Content-Type-Options", "nosniff")
     }
     return headers
   },

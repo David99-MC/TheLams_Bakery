@@ -9,6 +9,10 @@ export const useRefreshToken = () => {
   async function refresh() {
     const res = await fetch(API_URL + "api/refreshToken", {
       credentials: "include",
+      headers: {
+        "Cache-Control": "no-cache",
+        "X-Content-Type-Options": "nosniff",
+      },
     })
     const data = await res.json()
     const { user, accessToken, cart } = data
@@ -29,6 +33,10 @@ export const useLogout = () => {
   async function logout() {
     const res = await fetch(API_URL + "api/logout", {
       credentials: "include",
+      headers: {
+        "Cache-Control": "no-cache",
+        "X-Content-Type-Options": "nosniff",
+      },
     })
     const msg = await res.json()
     dispatch(clearCredentials())
