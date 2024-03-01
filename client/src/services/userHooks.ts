@@ -2,10 +2,12 @@ import { clearCart, setCart } from "../features/cart/cartSlice"
 import { clearCredentials, setCredentials } from "../features/user/userSlice"
 import { useAppDispatch } from "../utils/reduxHooks"
 
+const API_URL = "https://thelamsbakery-api.onrender.com" // "http://localhost:5000/"
+
 export const useRefreshToken = () => {
   const dispatch = useAppDispatch()
   async function refresh() {
-    const res = await fetch("http://localhost:5000/api/refreshToken", {
+    const res = await fetch(API_URL + "api/refreshToken", {
       credentials: "include",
     })
     const data = await res.json()
@@ -25,7 +27,7 @@ export const useRefreshToken = () => {
 export const useLogout = () => {
   const dispatch = useAppDispatch()
   async function logout() {
-    const res = await fetch("http://localhost:5000/api/logout", {
+    const res = await fetch(API_URL + "api/logout", {
       credentials: "include",
     })
     const msg = await res.json()

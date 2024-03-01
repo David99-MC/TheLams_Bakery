@@ -10,7 +10,7 @@ import { setCredentials, clearCredentials } from "../features/user/userSlice"
 import type { RootState } from "../utils/store"
 
 // TODO: change this to the actual server URL
-const API_URL = "http://localhost:5000"
+const API_URL = "https://thelamsbakery-api.onrender.com" // "http://localhost:5000"
 
 // Set up the base http query with the access token in the header
 const baseQuery = fetchBaseQuery({

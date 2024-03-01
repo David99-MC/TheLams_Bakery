@@ -24,7 +24,7 @@ type Cake = {
   soldOut: boolean
 }
 
-const BASE_URL = "http://localhost:5000/"
+const API_URL = "https://thelamsbakery-api.onrender.com" // "http://localhost:5000/"
 
 // credentials: "include" is used to send cookies
 
@@ -32,11 +32,11 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
   const accessToken = store.getState().user.accessToken
   let res = null
   if (path === "/api/refreshToken") {
-    res = await fetch(BASE_URL + path, {
+    res = await fetch(API_URL + path, {
       credentials: "include",
     })
   } else if (method === "GET" || method === "DELETE") {
-    res = await fetch(BASE_URL + path, {
+    res = await fetch(API_URL + path, {
       method: method,
       headers: {
         authorization: `Bearer ${accessToken}`,
@@ -45,7 +45,7 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
     })
   } else {
     // POST or PUT
-    res = await fetch(BASE_URL + path, {
+    res = await fetch(API_URL + path, {
       method: method,
       headers: {
         authorization: `Bearer ${accessToken}`,
