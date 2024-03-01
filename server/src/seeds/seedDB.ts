@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
-import Cake from "../models/Cake";
+import Cake from "../models/cake";
 
 import { cakes } from "./cakes";
 import { fakeOrders } from "./orders";
 import Order from "../models/order";
+
+import { config } from "dotenv";
+config();
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/TheLams_Bakery")
+  .connect(process.env.MONGO_URL || "mongodb://127.0.0.1:27017/TheLams_Bakery")
   .then(() => {
     console.log("Connected to TheLams_Bakery db!");
   })

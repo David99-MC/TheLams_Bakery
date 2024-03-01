@@ -21,7 +21,8 @@ import { corsOptions } from "../config/corsOptions";
 import { verifyOrigins } from "../middleware/originMiddleware";
 
 const PORT = process.env.PORT || 5000;
-const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
+const DB_URL =
+  process.env.MONGO_URL || "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
 mongoose
   .connect(DB_URL!)
   .then(() => {
@@ -122,11 +123,16 @@ app.get(
   })
 );
 
-// create new order
+// user places new order
 app.post(
   "/api/order",
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
+    const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
+    if (user) {
+      user.cart = [];
+      await user.save();
+    }
     const order = new Order(req.body);
     await order.save();
     res.status(200).json(order);
