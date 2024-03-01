@@ -21,7 +21,8 @@ import { corsOptions } from "../config/corsOptions";
 import { verifyOrigins } from "../middleware/originMiddleware";
 
 const PORT = process.env.PORT || 5000;
-const DB_URL = "mongodb://127.0.0.1:27017/TheLams_Bakery"; // process.env.MONGO_URL ||
+const DB_URL =
+  process.env.MONGO_URL || "mongodb://127.0.0.1:27017/TheLams_Bakery";
 mongoose
   .connect(DB_URL!)
   .then(() => {
