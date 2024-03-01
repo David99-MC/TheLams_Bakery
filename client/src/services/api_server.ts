@@ -35,7 +35,7 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
     res = await fetch(API_URL + path, {
       credentials: "include",
       headers: {
-        "Cache-Control": "no-cache",
+        "cache-control": "no-cache",
         "X-Content-Type-Options": "nosniff",
       },
     })
@@ -44,7 +44,7 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
       method: method,
       headers: {
         authorization: `Bearer ${accessToken}`,
-        "Cache-Control": "max-age=31536000, immutable",
+        "cache-control": "max-age=31536000, immutable",
         "X-Content-Type-Options": "nosniff",
       },
       credentials: "include",
@@ -56,7 +56,7 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
       headers: {
         authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
-        "Cache-Control": "max-age=31536000, immutable",
+        "cache-control": "max-age=31536000, immutable",
         "X-Content-Type-Options": "nosniff",
       },
       credentials: "include",

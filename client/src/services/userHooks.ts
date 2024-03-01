@@ -10,7 +10,7 @@ export const useRefreshToken = () => {
     const res = await fetch(API_URL + "api/refreshToken", {
       credentials: "include",
       headers: {
-        "Cache-Control": "no-cache",
+        "cache-control": "no-cache",
         "X-Content-Type-Options": "nosniff",
       },
     })
@@ -34,7 +34,7 @@ export const useLogout = () => {
     const res = await fetch(API_URL + "api/logout", {
       credentials: "include",
       headers: {
-        "Cache-Control": "no-cache",
+        "cache-control": "no-cache",
         "X-Content-Type-Options": "nosniff",
       },
     })

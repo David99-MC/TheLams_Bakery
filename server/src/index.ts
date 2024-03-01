@@ -93,6 +93,7 @@ app.get(
             expiresIn: "15m",
           }
         );
+        res.setHeader("x-content-type-options", "nosniff");
         res.json({
           user: { fullName: user.fullName, isAdmin: user.isAdmin },
           accessToken,
@@ -109,6 +110,7 @@ app.get(
   verifyJWT,
   asyncHandler(async (req: Request, res: Response) => {
     const menu = await Cake.find();
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json(menu);
   })
 );
@@ -119,6 +121,7 @@ app.get(
   asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const order = await Order.findById(id);
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json(order);
   })
 );
@@ -135,6 +138,7 @@ app.post(
     }
     const order = new Order(req.body);
     await order.save();
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json(order);
   })
 );
@@ -149,6 +153,7 @@ app.get(
       res.status(403);
       throw new Error("Forbidden, no user found with the token");
     }
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json(user.cart);
   })
 );
@@ -189,6 +194,7 @@ app.put(
       );
     }
     await user.save();
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json({ item, action });
   })
 );
@@ -204,6 +210,7 @@ app.delete(
     }
     user.cart = [];
     await user.save();
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json({ message: "cart is cleared" });
   })
 );
@@ -228,6 +235,7 @@ app.post(
     });
     user.refreshToken = refreshToken;
     await user.save();
+    res.setHeader("x-content-type-options", "nosniff");
     res.status(200).json({
       user: { fullName: user.fullName, isAdmin: user.isAdmin },
       accessToken,
@@ -250,6 +258,7 @@ app.post(
       });
       user.refreshToken = refreshToken;
       await user.save();
+      res.setHeader("x-content-type-options", "nosniff");
       res.status(200).json({
         user: { fullName: user.fullName, isAdmin: user.isAdmin },
         accessToken,
@@ -265,6 +274,7 @@ app.post(
 // logout
 app.get("/api/logout", async (req: Request, res: Response) => {
   const refreshToken = req.cookies["refreshJwt"];
+  res.setHeader("x-content-type-options", "nosniff");
   if (!refreshToken) {
     res.status(200).json({ message: "successfully logged out!" });
     return;
