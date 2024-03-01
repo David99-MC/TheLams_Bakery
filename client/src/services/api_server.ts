@@ -34,12 +34,18 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
   if (path === "/api/refreshToken") {
     res = await fetch(API_URL + path, {
       credentials: "include",
+      headers: {
+        "Cache-Control": "no-cache",
+        "X-Content-Type-Options": "nosniff",
+      },
     })
   } else if (method === "GET" || method === "DELETE") {
     res = await fetch(API_URL + path, {
       method: method,
       headers: {
         authorization: `Bearer ${accessToken}`,
+        "Cache-Control": "max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
       },
       credentials: "include",
     })
@@ -50,6 +56,8 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
       headers: {
         authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
+        "Cache-Control": "max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
       },
       credentials: "include",
       body: JSON.stringify(body),
