@@ -11,7 +11,7 @@ config();
 
 import { notFound, errorHandler } from "../middleware/errorMiddleware";
 import generateTokens from "../utils/generateToken";
-import { verifyJWT } from "../middleware/JwtVerifyMiddleware";
+import { verifyJWT } from "../middleware/jwtVerifyMiddleware";
 
 import Cake from "./models/cake";
 import Order from "./models/order";
