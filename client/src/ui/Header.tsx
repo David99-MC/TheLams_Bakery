@@ -4,7 +4,7 @@ import Username from "../features/user/Username"
 import SearchOrder from "../features/order/SearchOrder"
 import Button from "./Button"
 import toast from "react-hot-toast"
-import { useLogout } from "../services/customHooks"
+import { useLogout } from "../services/userHooks"
 
 function Header() {
   const { fullName } = useAppSelector((state) => state.user) ?? {}

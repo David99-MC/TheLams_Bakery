@@ -1,4 +1,5 @@
 import type { CartItemType } from "../features/cart/Cart"
+import { setCredentials } from "../features/user/userSlice"
 import store from "../utils/store"
 
 type Order = {
@@ -27,40 +28,98 @@ const BASE_URL = "http://localhost:5000/"
 
 // credentials: "include" is used to send cookies
 
-export async function getMenu() {
+async function fetchBaseQuery(path: string, method?: string, body?: object) {
   const accessToken = store.getState().user.accessToken
-  const res = await fetch(BASE_URL + "api/menu", {
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-    },
-    credentials: "include",
-  })
-  //the caller will catch this error
-  if (!res.ok) throw new Error("Failed to fetch the menu")
-  const data = await res.json()
+  let res = null
+  if (path === "/api/refreshToken") {
+    res = await fetch(BASE_URL + path, {
+      credentials: "include",
+    })
+  } else if (method === "GET" || method === "DELETE") {
+    res = await fetch(BASE_URL + path, {
+      method: method,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      credentials: "include",
+    })
+  } else {
+    // POST or PUT
+    res = await fetch(BASE_URL + path, {
+      method: method,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(body),
+    })
+  }
+  return res
+}
+
+async function fetchBaseQueryWithReauth(
+  path: string,
+  method?: string,
+  body?: object
+) {
+  let result = await fetchBaseQuery(path, method, body)
+  if (!result.ok && result.status === 403) {
+    const refreshResult = await fetchBaseQuery("/api/refreshToken")
+    const { accessToken } = await refreshResult.json()
+    if (accessToken) {
+      console.log("refresh token success")
+      const { fullName, isAdmin } = store.getState().user
+      // store the new access token in the redux store (memory only)
+      store.dispatch(
+        setCredentials({
+          fullName,
+          isAdmin,
+          accessToken,
+        })
+      )
+      // Try the original request again with new access token
+      result = await fetchBaseQuery(path, method, body)
+    } else {
+      throw new Error(`Error: ${result.status} - ${result.statusText}`)
+    }
+  }
+  return result.json()
+}
+
+export async function getMenu() {
+  const data = await fetchBaseQueryWithReauth("api/menu", "GET")
   return data as Cake[]
 }
 
 export async function getOrderById(id: string) {
-  const res = await fetch(BASE_URL + `api/order/${id}`)
-  if (!res.ok) throw new Error("Can't find that order")
-  const data = await res.json()
+  const data = await fetchBaseQueryWithReauth(`api/order/${id}`, "GET")
   return data as Order
 }
 
 export async function createNewOrder(order: Order) {
-  // order object is stringified
+  const data = await fetchBaseQueryWithReauth("api/order", "POST", order)
+  return data as Order
+}
+
+export async function getCartAsync() {
   const accessToken = store.getState().user.accessToken
-  const res = await fetch(BASE_URL + `api/order`, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify(order),
-  })
-  if (!res.ok) throw new Error("Failed to save order into db")
-  const data = await res.json()
-  return data
+  if (!accessToken) {
+    return []
+  }
+  const data = await fetchBaseQueryWithReauth("api/cart", "GET")
+  return data as CartItemType[]
+}
+
+export async function updateCartItemAsync(body: {
+  item: CartItemType
+  action: "add" | "remove" | "delete"
+}) {
+  const data = await fetchBaseQueryWithReauth(`api/cart`, "PUT", body)
+  return data as { item: CartItemType; action: string }
+}
+
+export async function clearCartAsync() {
+  const data = await fetchBaseQueryWithReauth(`api/cart`, "DELETE")
+  return data as { message: string }
 }

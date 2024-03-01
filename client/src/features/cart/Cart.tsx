@@ -1,11 +1,13 @@
+// import { useQuery } from "@tanstack/react-query"
+import { useClearCart } from "../../services/cartHooks"
 import Button from "../../ui/Button"
 import LinkButton from "../../ui/LinkButton"
-import { useAppDispatch, useAppSelector } from "../../utils/reduxHooks"
+import { useAppSelector } from "../../utils/reduxHooks"
 import CartItem from "./CartItem"
 import EmptyCart from "./EmptyCart"
-import { clearCart, getCart } from "./cartSlice"
+import { getCart } from "./cartSlice"
 
-// remove productID since mongo already gave an _id field
+// productID is taken from the cake's _id
 export type CartItemType = {
   productID: string
   productName: string
@@ -15,7 +17,12 @@ export type CartItemType = {
 
 function Cart() {
   const cartItems = useAppSelector(getCart)
-  const dispatch = useAppDispatch()
+
+  const { clearCartItems, isClearing } = useClearCart()
+
+  function onClearCart() {
+    clearCartItems()
+  }
 
   return (
     <div className="mx-6 my-4">
@@ -37,7 +44,11 @@ function Cart() {
             <Button type="primary" to="/order/new">
               Check out
             </Button>
-            <Button type="secondary" onClick={() => dispatch(clearCart())}>
+            <Button
+              disabled={isClearing}
+              type="secondary"
+              onClick={onClearCart}
+            >
               Clear cart
             </Button>
           </div>

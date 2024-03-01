@@ -29,7 +29,6 @@ export const useLogout = () => {
       credentials: "include",
     })
     const msg = await res.json()
-    console.log(msg)
     dispatch(clearCredentials())
     dispatch(clearCart())
     return msg

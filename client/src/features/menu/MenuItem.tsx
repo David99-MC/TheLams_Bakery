@@ -1,8 +1,7 @@
 import type { Cake } from "../../../../server/src/models/cake"
+import { useAddCartItem } from "../../services/cartHooks"
 import Button from "../../ui/Button"
-import { useAppDispatch } from "../../utils/reduxHooks"
 import type { CartItemType } from "../cart/Cart"
-import { addItem } from "../cart/cartSlice"
 
 function MenuItem(item: Cake) {
   const { _id, vietnameseName, unitPrice, ingredients, soldOut, imgUrl } = item
@@ -12,15 +11,9 @@ function MenuItem(item: Cake) {
     quantity: 1,
     unitPrice,
   }
-  const dispatch = useAppDispatch()
-  // const {mutate} = useMutation({
-  //  mutationKey: "userSession",
-  //   mutationFn:
-  // })
-
+  const { addCartItem, isAdding } = useAddCartItem()
   function onAddToCart() {
-    dispatch(addItem(cartItem))
-    // mutate(cartItem)
+    addCartItem({ item: cartItem, action: "add" })
   }
 
   return (
@@ -39,7 +32,11 @@ function MenuItem(item: Cake) {
               Sold out
             </p>
           )}
-          <Button disabled={soldOut} onClick={onAddToCart} type="small">
+          <Button
+            disabled={soldOut || isAdding}
+            onClick={onAddToCart}
+            type="small"
+          >
             Add to cart
           </Button>
         </div>

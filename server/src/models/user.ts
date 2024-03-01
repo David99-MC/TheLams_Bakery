@@ -1,4 +1,4 @@
-import { Schema, model, Types, Model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
 import { compareSync, genSaltSync, hashSync } from "bcrypt-ts";
 
 export type cartItemType = {

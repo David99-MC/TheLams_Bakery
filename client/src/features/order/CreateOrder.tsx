@@ -5,12 +5,13 @@ import { useForm } from "react-hook-form"
 
 import { clearCart, getCart, getTotalCartPrice } from "../cart/cartSlice"
 import type { CartItemType } from "../cart/Cart"
-import { OrderStatus, type Order } from "../../../../server/src/models/order"
 import { createNewOrder } from "../../services/api_server"
 
 import EmptyCart from "../cart/EmptyCart"
 import Button from "../../ui/Button"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
+import type { Order } from "./OrderTypes"
 
 type OrderFormData = {
   customerName: string
@@ -22,7 +23,7 @@ type OrderFormData = {
 function CreateOrder() {
   const [withPriority, setWithPriority] = useState<boolean>(false)
 
-  const username = useAppSelector((state) => state.user.username)
+  const { fullName } = useAppSelector((state) => state.user)
   const navigate = useNavigate()
 
   const { register, handleSubmit } = useForm<OrderFormData>()
@@ -41,9 +42,10 @@ function CreateOrder() {
 
   const { mutate, isLoading: isSubmitting } = useMutation({
     mutationFn: createNewOrder,
-    onSuccess: (data) => {
+    onSuccess: (data: Order) => {
       dispatch(clearCart())
       navigate(`/order/${data._id}`)
+      toast.success("Order placed successfully 🎉")
     },
   })
 
@@ -54,7 +56,7 @@ function CreateOrder() {
   function onOrderSubmit(data: OrderFormData) {
     const correctCart: Order = {
       ...data,
-      status: OrderStatus.Received,
+      status: "Received",
       orderPrice: cartPrice,
       priorityPrice,
       cart,
@@ -75,7 +77,7 @@ function CreateOrder() {
             type="text"
             className="input grow"
             placeholder="John Doe"
-            defaultValue={username}
+            defaultValue={fullName || ""}
             {...register("customerName", {
               required: "This field is required",
             })}

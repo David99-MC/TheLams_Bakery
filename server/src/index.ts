@@ -102,6 +102,7 @@ app.get(
   })
 );
 
+// get menu
 app.get(
   "/api/menu",
   verifyJWT,
@@ -111,6 +112,7 @@ app.get(
   })
 );
 
+// get order by id
 app.get(
   "/api/order/:id",
   asyncHandler(async (req: Request, res: Response) => {
@@ -120,6 +122,7 @@ app.get(
   })
 );
 
+// create new order
 app.post(
   "/api/order",
   verifyJWT,
@@ -130,9 +133,79 @@ app.post(
   })
 );
 
+// get cart from the current logged in user
+app.get(
+  "/api/cart",
+  verifyJWT,
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
+    if (!user) {
+      res.status(403);
+      throw new Error("Forbidden, no user found with the token");
+    }
+    res.status(200).json(user.cart);
+  })
+);
+
+// add/delete item to/from the cart
+app.put(
+  "/api/cart",
+  verifyJWT,
+  asyncHandler(async (req: Request, res: Response) => {
+    const { item, action } = req.body;
+    const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
+    if (!user) {
+      res.status(403);
+      throw new Error("Forbidden, no user found with the token");
+    }
+    if (action === "add") {
+      const cartItem = user.cart.find(
+        (existItem) => existItem.productID === item.productID
+      );
+      if (cartItem) {
+        user.cart = user.cart.map((existItem) =>
+          existItem.productID === item.productID
+            ? { ...existItem, quantity: existItem.quantity + 1 }
+            : existItem
+        );
+      } else {
+        user.cart.push(item);
+      }
+    } else if (action === "remove") {
+      user.cart = user.cart.map((cartItem) =>
+        cartItem.productID === item.productID && cartItem.quantity > 1
+          ? { ...cartItem, quantity: cartItem.quantity - 1 }
+          : cartItem
+      );
+    } else if (action === "delete") {
+      user.cart = user.cart.filter(
+        (cartItem) => cartItem.productID !== item.productID
+      );
+    }
+    await user.save();
+    res.status(200).json({ item, action });
+  })
+);
+
+app.delete(
+  "/api/cart",
+  verifyJWT,
+  asyncHandler(async (req: Request, res: Response) => {
+    const user = await User.findOne({ refreshToken: req.cookies.refreshJwt });
+    if (!user) {
+      res.status(403);
+      throw new Error("Forbidden, no user found with the token");
+    }
+    user.cart = [];
+    await user.save();
+    res.status(200).json({ message: "cart is cleared" });
+  })
+);
+
 // handling user roles
 // ref: https://www.youtube.com/watch?v=f2EqECiTBL8 ~ 5:09:00
 
+// register
 app.post(
   "/api/register",
   asyncHandler(async (req: Request, res: Response) => {
@@ -157,6 +230,7 @@ app.post(
   })
 );
 
+// login
 app.post(
   "/api/login",
   asyncHandler(async (req: Request, res: Response) => {
@@ -182,6 +256,7 @@ app.post(
   })
 );
 
+// logout
 app.get("/api/logout", async (req: Request, res: Response) => {
   const refreshToken = req.cookies["refreshJwt"];
   if (!refreshToken) {
