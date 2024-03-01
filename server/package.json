@@ -5,6 +5,7 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
+    "start": "npx tsx src/index.ts",
     "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"npx tsx src/index.ts\"",
     "seed": "npx tsx src/seeds/seedDB.ts"
   },
