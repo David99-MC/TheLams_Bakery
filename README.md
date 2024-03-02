@@ -1,4 +1,4 @@
-** 👉 Play around with the app: https://the-lams-bakery.onrender.com**
+**👉 Play around with the app: https://the-lams-bakery.onrender.com**
 
 *NOTE:* Hosting frontend and backend separately causes some new problems that with my current state of knowledge, cannot be figured out. The problem being every the page is refresh, the client will automatically make a request to the current url, as opposed to a backend API.
 
