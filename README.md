@@ -14,7 +14,7 @@ So far, thanks to [render's document](https://docs.render.com/deploy-create-reac
 
 *The problem that persists:* refreshing the page while logged in will invalidate the jwt and the user will be sent back login page (as how I wanted if any user tries to access any authentication-required page). However, any products that the user has added to cart will stay the same until they check out. So by logging back in, they will still see their order. I apologize for any inconvenience and I will seek out help to solve this. Enjoy! 
 
-Tech stack used: MongoDB, Express, React with Typescript, Node
-Library used with React: Redux with createAPI, React Query, React Hook Form
-Styling: Tailwind CSS
-Authentication: I used JWT to create access and refresh token for both authenticate the user and login persistent. After logging it, upon which the access token is sent to the frontend and the refresh token is saved into db, the user is free to access any of the site's permitted activities. In the event of access token expired, the site will automatically request a new access token using the refresh token, which is Http Only, allowing the user to keep up the activities without having to login again. Lastly, logging out will immediately invalidate both the access and refresh token.
+💻 Tech stack used: MongoDB, Express, React with Typescript, Node. <br>
+📚 Library used with React: Redux with createAPI, React Query, React Hook Form. <br>
+💅 Styling: Tailwind CSS. <br>
+🔐 Authentication: I used JWT to create access and refresh token for both authenticate the user and login persistent. After logging it, upon which the access token is sent to the frontend and the refresh token is saved into db, the user is free to access any of the site's permitted activities. In the event of access token expired, the site will automatically request a new access token using the refresh token, which is Http Only, allowing the user to keep up the activities without having to login again. Lastly, logging out will immediately invalidate both the access and refresh token.
