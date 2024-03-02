@@ -44,8 +44,8 @@ async function fetchBaseQuery(path: string, method?: string, body?: object) {
       method: method,
       headers: {
         authorization: `Bearer ${accessToken}`,
-        // "cache-control": "max-age=31536000, immutable",
-        // "X-Content-Type-Options": "nosniff",
+        "cache-control": "max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
       },
       credentials: "include",
     })
