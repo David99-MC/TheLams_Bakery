@@ -30,12 +30,12 @@ function Header() {
           <>
             <Username />
             <Button onClick={handleSignOut} type="small">
-              Sign out
+              <span className="text-nowrap">Sign out</span>
             </Button>
           </>
         ) : (
           <Button type="small" to="/login">
-            Sign in
+            <span className="text-nowrap">Sign in</span>
           </Button>
         )}
       </div>
